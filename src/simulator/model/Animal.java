@@ -67,9 +67,13 @@ public abstract class Animal implements Entity, AnimalInfo{
 		this.regionMngr = regMngr;
 		
 	}
-	//hola
+	
 	public double getAge() {
 		return age;
+	}
+	
+	public Vector2D getPos() {
+		return pos;
 	}
 	
 	
