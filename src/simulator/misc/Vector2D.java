@@ -110,6 +110,15 @@ public class Vector2D {
 		assert (y >= min && y <= max);
 		return new Vector2D(x, y);
 	}
+	
+	//TODO Chequear si esta generacion de Posicion Aleatoria es correcta.
+	public static Vector2D createRandomPosition(double width, double height) {
+
+	    double x = Utils.RAND.nextDouble() * width;
+	    double y = Utils.RAND.nextDouble() * height;
+	    
+	    return new Vector2D(x, y);
+	}
 
 	public JSONArray asJSONArray() {
 		JSONArray a = new JSONArray();
