@@ -1,10 +1,13 @@
 package simulator.model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import simulator.misc.Utils;
 import simulator.misc.Vector2D;
 
 public abstract class Animal implements Entity, AnimalInfo{
-	protected String geneticCode;
+	private String geneticCode;
 	private Diet diet;
 	private State state;
 	private Vector2D pos;
@@ -26,7 +29,7 @@ public abstract class Animal implements Entity, AnimalInfo{
 			throw new IllegalArgumentException();
 		}
 		if(this.pos.equals(null)) {
-			this.
+			// TODO: rellenar
 		}else {
 			this.pos = pos;
 		}
@@ -65,12 +68,131 @@ public abstract class Animal implements Entity, AnimalInfo{
 	
 	void init(AnimalMapView regMngr) {
 		this.regionMngr = regMngr;
-		
-	}
-	//hola
-	public double getAge() {
-		return age;
+		if(this.pos == null) {
+			this.pos = Vector2D.createRandomPosition(regionMngr.getWidth()-1, regionMngr.getHeight()-1);
+		} else { // TODO corregir este código para asegurar que siempre está en el mapa
+			while (x >= width) x = (x - width);  
+			while (x < 0) x = (x + width);  
+			while (y >= height) y = (y - height);  
+			while (y < 0) y = (y + height);
+		}
+		this.dest = Vector2D.createRandomPosition(regionMngr.getWidth()-1, regionMngr.getHeight()-1);
 	}
 	
+	Animal deliverBaby() {
+		Animal baby = this.baby;
+		this.baby = null;
+		return baby;
+	}
+	
+	protected void move(double speed) {
+		pos = pos.plus(dest.minus(pos).direction().scale(speed));		
+	}
+	
+	protected void setState(State state) {
+	  	this.state = state;
+	  	switch (state) {
+	  	case NORMAL:
+	  		setNormalStateAction();
+	  		break;
+	  	case MATE:
+	  		setMateStateAction();
+	  		break;
+	  	case HUNGER:
+	  		setHungerStateAction();
+	  		break;
+	  	case DANGER:
+	  		setDangerStateAction();
+	  		break;
+	  	case DEAD:
+	  		setDeadStateAction();
+	  		break;
+	  }
+}
+	
+	abstract protected void setNormalStateAction();
+	
+	abstract protected void setMateStateAction();
+	
+	abstract protected void setHungerStateAction();
+	
+	abstract protected void setDangerStateAction();
+	
+	abstract protected void setDeadStateAction();
+	
+	public JSONObject asJSON() {
+		JSONObject archivo = new JSONObject();
+		JSONArray position = new JSONArray();
+		position.put(this.pos.getX());
+		position.put(this.pos.getY());
+		
+		archivo.put("pos", position);
+		archivo.put("gcode", this.geneticCode);
+		archivo.put("diet", this.diet.name());
+		archivo.put("state", this.state.name());
+		
+		return archivo;
+	}
+	
+	// Getters:
+
+	public Diet getDiet() {
+		return diet;
+	}
+
+	public Vector2D getDest() {
+		return dest;
+	}
+
+	public double getEnergy() {
+		return energy;
+	}
+
+	public double getSpeed() {
+		return speed;
+	}
+
+	public double getDesire() {
+		return desire;
+	}
+	
+	public State getState() {
+		return state;
+	}
+	
+	public Animal getMateTarget() {
+		return mateTarget;
+	}
+	
+	public Animal getBaby() {
+		return baby;
+	}
+	
+	// Setters:
+	
+	public void setBaby(Animal baby) {
+		this.baby = baby;
+	}
+	
+	public void setMateTarget(Animal mateTarget) {
+		this.mateTarget = mateTarget;
+	}
+
+	public void setDesire(double desire) {
+		this.desire = desire;
+	}
+	
+	public void setAge(double age) {
+		this.age = age;
+	}
+
+	public void setEnergy(double energy) {
+		this.energy = energy;
+	}
+	
+	public void setDest(Vector2D dest) {
+		this.dest = dest;
+	}
+
 	
 }
