@@ -7,8 +7,6 @@ public class Sheep extends Animal {
 	private Animal dangerSource;
 	private SelectionStrategy dangerStrategy;
 	
-	private double dt; // TODO: ver cual es la mejor forma de implementarlo
-
 	public Sheep(SelectionStrategy mateStrategy, SelectionStrategy dangerStrategy,  Vector2D pos) {
 		super(SHEEP_GENETIC_CODE, Diet.HERBIVORE, INIT_SIGHT_SHEEP, INIT_SPEED_SHEEP, mateStrategy, pos);
 		this.dangerStrategy = dangerStrategy;
@@ -23,7 +21,6 @@ public class Sheep extends Animal {
 
 	@Override
 	public void update(double dt) {
-		this.dt = dt;
 		if(this.getState() != State.DEAD) {
 			if(this.getEnergy() == 0.0 || this.getAge() > MAX_AGE_SHEEP) {
 				this.setState(State.DEAD);
@@ -32,13 +29,13 @@ public class Sheep extends Animal {
 				// de regiones usando getFood(this, dt) y se añade a su energy (manteniéndolo siempre entre 0.0 y 100.0)
 			  	switch (this.getState()) {
 			  	case NORMAL:
-			  		setNormalStateAction();
+			  		applyNormalState(dt);
 			  		break;
 			  	case DANGER:
-			  		setMateStateAction();
+			  		applyDangerState(dt);
 			  		break;
 			  	case MATE:
-			  		setHungerStateAction();
+			  		applyMateState(dt);
 			  		break;
 				default:
 					break;
@@ -47,37 +44,7 @@ public class Sheep extends Animal {
 		}
 	}
 	
-	// TODO: revisar y cambiar todo lo que depende del gestor de regiones en el update y los métodos que se usan en update
-	
-	@Override
-	protected void setNormalStateAction() {
-		if(this.getPosition().distanceTo(getDest()) < 8.0) { // esto no se puede mover dentro de setNormalStateAction pr hace falta dt
-			setDest(Vector2D.createRandomPosition(regionMngr.getWidth()-1, regionMngr.getHeight()-1)); // TODO: revisar generacion de pos aleatoria
-		}
-		this.move(getSpeed()*dt*Math.exp((getEnergy()-100.0)*0.007));
-		this.setAge(this.getAge()+dt);
-		
-		double newEnergy = this.getEnergy()-(20.0*dt);
-		if(newEnergy < 0.0) newEnergy = 0.0;
-		this.setEnergy(newEnergy);
-		
-		double newDesire = this.getDesire()-(40.0*dt);
-		if(newDesire < 0.0) newDesire = 0.0;
-		this.setDesire(newDesire);
-		
-		// Cambio de estado
-		if (dangerSource == null) {
-			// TODO: Si dangerSource es null, buscar un nuevo animal que se considere peligroso.
-			// Para buscar un animal que se considere peligroso, hay que pedir al gestor de regiones la lista de animales carnívoros en el campo visual,
-			// usando el método getAnimalsInRange, y después elegir uno usando la estrategia de selección correspondiente.
-			if(this.getDesire() > 65.0) this.setState(State.MATE);
-		} else { 
-			this.setState(State.DANGER);
-		}
-	}
-	
-	@Override
-	protected void setDangerStateAction() {
+	private void applyDangerState(double dt) {
 		if(this.dangerSource != null && this.getState().equals(getState().DEAD)) this.dangerSource = null;
 		if(this.dangerSource == null) {
 			if(this.getPosition().distanceTo(getDest()) < 8.0) { // esto no se puede mover dentro de setNormalStateAction pr hace falta dt
@@ -97,7 +64,6 @@ public class Sheep extends Animal {
 			this.setDesire(newDesire);
 		}
 		
-		// Cambio de estado
 		if(dangerSource == null || !isInSightRange(dangerSource))  {
 			// TODO: Si dangerSource es null, buscar un nuevo animal que se considere peligroso.
 			// Para buscar un animal que se considere peligroso, hay que pedir al gestor de regiones la lista de animales carnívoros en el campo visual,
@@ -106,9 +72,8 @@ public class Sheep extends Animal {
 			else this.setState(State.MATE);
 		} 
 	}
-	
-	@Override
-	protected void setMateStateAction() {
+
+	private void applyMateState(double dt) {
 		if(this.getMateTarget() != null &&
 				(this.getMateTarget().getState().equals(State.DEAD) || isInSightRange(this.getMateTarget())))  {
 			this.setMateTarget(null);
@@ -145,14 +110,13 @@ public class Sheep extends Animal {
 				this.setDesire(0.0);
 				this.getMateTarget().setDesire(0.0);
 				if(this.getBaby() == null) {
-					if(probabilidad > 0.0) {
+					if(probabilidad > 0.75) {
 						this.setBaby(Sheep(this, this.getMateTarget()); // TODO como hacer que use el constructor de sheep?
 					}
 				}
 				this.setMateTarget(null);
 			}
-		}
-		
+		}		
 		if(dangerSource == null) {
 			// TODO: Si dangerSource es null, buscar un nuevo animal que se considere peligroso.
 			// Para buscar un animal que se considere peligroso, hay que pedir al gestor de regiones la lista de animales carnívoros en el campo visual,
@@ -162,6 +126,47 @@ public class Sheep extends Animal {
 			this.setState(State.DANGER);
 			if(this.getDesire() < 65.0) this.setState(State.NORMAL);
 		}
+	}
+
+	// TODO: revisar y cambiar todo lo que depende del gestor de regiones en el update y los métodos que se usan en update
+	
+	private void applyNormalState(double dt) {
+		if(this.getPosition().distanceTo(getDest()) < 8.0) { // esto no se puede mover dentro de setNormalStateAction pr hace falta dt
+			setDest(Vector2D.createRandomPosition(regionMngr.getWidth()-1, regionMngr.getHeight()-1)); // TODO: revisar generacion de pos aleatoria
+		}
+		this.move(getSpeed()*dt*Math.exp((getEnergy()-100.0)*0.007));
+		this.setAge(this.getAge()+dt);
+		
+		double newEnergy = this.getEnergy()-(20.0*dt);
+		if(newEnergy < 0.0) newEnergy = 0.0;
+		this.setEnergy(newEnergy);
+		
+		double newDesire = this.getDesire()+(40.0*dt);
+		if(newDesire < 0.0) newDesire = 0.0;
+		else if (newDesire > )
+		this.setDesire(newDesire);
+		
+		if (dangerSource == null) {
+			// TODO: Si dangerSource es null, buscar un nuevo animal que se considere peligroso.
+			// Para buscar un animal que se considere peligroso, hay que pedir al gestor de regiones la lista de animales carnívoros en el campo visual,
+			// usando el método getAnimalsInRange, y después elegir uno usando la estrategia de selección correspondiente.
+			if(this.getDesire() > 65.0) this.setState(State.MATE);
+		} else { 
+			this.setState(State.DANGER);
+		}
+	}
+
+	@Override
+	protected void setNormalStateAction() {
+
+	}
+	
+	@Override
+	protected void setDangerStateAction() {
+	}
+	
+	@Override
+	protected void setMateStateAction() {	
 	}
 	
 	private boolean isInSightRange(Animal a) {
