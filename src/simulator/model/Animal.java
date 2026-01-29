@@ -165,6 +165,10 @@ public abstract class Animal implements Entity, AnimalInfo{
 		return pos;
 	}
 	
+	public State getState() {
+		return state;
+	}
+	
 	//SETTERS
 	public void setEnergy(double energy) {
 		this.energy = energy;
