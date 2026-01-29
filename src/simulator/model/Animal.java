@@ -134,6 +134,14 @@ public abstract class Animal implements Entity, AnimalInfo{
 		return archivo;
 	}
 	
+	public static Vector2D createRandomPosition(double width, double height) {
+
+	    double x = Utils.RAND.nextDouble() * width;
+	    double y = Utils.RAND.nextDouble() * height;
+	    
+	    return new Vector2D(x, y);
+	}
+	
 	// Getters:
 
 	public Diet getDiet() {
@@ -163,11 +171,29 @@ public abstract class Animal implements Entity, AnimalInfo{
 	public Animal getMateTarget() {
 		return mateTarget;
 	}
+
 	
-	public Animal getBaby() {
-		return baby;
+	public Vector2D getPosition() {
+		return pos;
 	}
 	
+	public String getGeneticCode() {
+		return this.geneticCode;
+	}
+	
+	public double getSightRange() {
+		return sightRange;
+	}
+	public double getAge() {
+		return age;
+	}
+	public Vector2D getDestination() {
+		return dest;
+	}
+	
+	public boolean isPregnant() {
+		return this.baby != null;
+	}
 	// Setters:
 	
 	public void setBaby(Animal baby) {

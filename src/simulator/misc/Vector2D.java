@@ -130,14 +130,7 @@ public class Vector2D {
 		return result;
 	}
 	
-	//TODO Sacar función de aquí.
-	public static Vector2D createRandomPosition(double width, double height) {
-
-	    double x = Utils.RAND.nextDouble() * width;
-	    double y = Utils.RAND.nextDouble() * height;
-	    
-	    return new Vector2D(x, y);
-	}
+	
 
 	@Override
 	public boolean equals(Object obj) {
