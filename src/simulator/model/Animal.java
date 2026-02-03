@@ -191,6 +191,10 @@ public abstract class Animal implements Entity, AnimalInfo{
 		return dest;
 	}
 	
+	public AnimalMapView getRegionMngr() {
+		return regionMngr;
+	}
+
 	public boolean isPregnant() {
 		return this.baby != null;
 	}

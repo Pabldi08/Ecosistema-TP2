@@ -102,7 +102,7 @@ public class Sheep extends Animal {
 	
 	public void applyNormalState(double dt) {
 		if(this.getDestination().distanceTo(this.getPosition())< 8.0) {
-			setDest(Animal.createRandomPosition(regionMngr.getWidth() - 1, regionMngr.getHeight() - 1));
+			setDest(Animal.createRandomPosition(this.getRegionMngr().getWidth() - 1, this.getRegionMngr().getHeight() - 1));
 		}
 		moveIn(dt);
 		if(this.dangerSource == null) {
@@ -160,7 +160,7 @@ public class Sheep extends Animal {
 			
 			
 			if(this.getPosition().distanceTo(getDest()) < 8.0) { // esto no se puede mover dentro de setNormalStateAction pr hace falta dt
-				setDest(Vector2D.createRandomPosition(regionMngr.getWidth()-1, regionMngr.getHeight()-1)); // TODO: revisar generacion de pos aleatoria
+				setDest(Vector2D.createRandomPosition(this.getRegionMngr().getWidth()-1, this.getRegionMngr().getHeight()-1)); // TODO: revisar generacion de pos aleatoria
 			}
 			this.move(getSpeed()*dt*Math.exp((getEnergy()-100.0)*0.007));
 			this.setAge(this.getAge()+dt);
