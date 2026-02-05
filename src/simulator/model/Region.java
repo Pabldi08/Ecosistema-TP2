@@ -26,6 +26,10 @@ public abstract class Region implements Entity, FoodSupplier, RegionInfo {
 		return Collections.unmodifiableList(this.animalList);
 	}
 	
+	final void setAnimals(List<Animal> animalList){
+		this.animalList = animalList;
+	}
+	
 	public JSONObject asJSON() {
 		JSONObject obj = new JSONObject();
 		JSONArray arr = new JSONArray();

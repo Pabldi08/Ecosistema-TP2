@@ -66,24 +66,28 @@ public abstract class Animal implements Entity, AnimalInfo{
 		this.mateStrategy = p2.mateStrategy;
 	}
 	
-	void init(AnimalMapView regMngr) {
+	void init(AnimalMapView regMngr) { // TODO: revisar init
 		this.regionMngr = regMngr;
 		if(this.pos == null) {
 			this.pos = Animal.createRandomPosition(regionMngr.getWidth()-1, regionMngr.getHeight()-1);
-		} else { // TODO corregir este código para asegurar que siempre está en el mapa
-			double x = this.getPosition().getX();
-			double y = this.getPosition().getY();
-			int width = this.getRegionMngr().getWidth();
-			int height = this.getRegionMngr().getHeight();
-			
-			while (x >= width) x = (x - width);  
-			while (x < 0) x = (x + width);  
-			while (y >= height) y = (y - height);  
-			while (y < 0) y = (y + height);
-			
-		    this.pos = new Vector2D(x,y);
+		} else {
+			this.adjustPosition();
 		}
 		this.dest = Animal.createRandomPosition(regionMngr.getWidth()-1, regionMngr.getHeight()-1);
+	}
+	
+	protected boolean adjustPosition () {
+		Vector2D posIni = this.pos;
+		double x = this.getPosition().getX();
+		double y = this.getPosition().getY();
+		int width = this.getRegionMngr().getWidth();
+		int height = this.getRegionMngr().getHeight();
+		while (x >= width) x = (x - width);  
+		while (x < 0) x = (x + width);  
+		while (y >= height) y = (y - height);  
+		while (y < 0) y = (y + height);
+	    this.pos = new Vector2D(x,y);
+	    return posIni != this.pos;
 	}
 	
 	Animal deliverBaby() {
@@ -116,6 +120,10 @@ public abstract class Animal implements Entity, AnimalInfo{
 	  		break;
 	  }
 }
+	
+	public boolean isInSightRange(Animal a) { //TODO: preguntar si se puede hacer pública
+		return a.getPosition().distanceTo(this.getPosition()) <= this.getSightRange();
+	}
 	
 	abstract protected void setNormalStateAction();
 	
@@ -216,7 +224,7 @@ public abstract class Animal implements Entity, AnimalInfo{
 	}
 
 	public void setDesire(double desire) {
-		this.desire = desire;
+		this.desire = Utils.constrainValueInRange(desire, 0.0, 100.0);
 	}
 	
 	public void setAge(double age) {
@@ -224,7 +232,7 @@ public abstract class Animal implements Entity, AnimalInfo{
 	}
 
 	public void setEnergy(double energy) {
-		this.energy = energy;
+		this.energy = Utils.constrainValueInRange(energy, 0.0, 100.0);
 	}
 	
 	public void setDest(Vector2D dest) {

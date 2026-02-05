@@ -37,26 +37,42 @@ public class Wolf extends Animal {
 	@Override
 	public void update(double dt) {
 		if(this.getState() != State.DEAD) {
-			if(this.getEnergy() == 0.0 || this.getAge() > MAX_AGE_WOLF) {
-				this.setState(State.DEAD);
-			} else {
-				// TODO: Si su estado no es DEAD, pide comida al gestor
-				// de regiones usando getFood(this, dt) y se añade a su energy (manteniéndolo siempre entre 0.0 y 100.0)
-			  	switch (this.getState()) {
-			  	case NORMAL:
-			  		applyNormalState(dt);
-			  		break;
-			  	case DANGER:
-			  		applyDangerState(dt);
-			  		break;
-			  	case MATE:
-			  		applyMateState(dt);
-			  		break;
-				default:
-					break;
-			  	}
+			switch (this.getState()) {
+		  	case NORMAL:
+		  		applyNormalState(dt);
+		  		break;
+		  	case DANGER:
+		  		applyDangerState(dt);
+		  		break;
+		  	case MATE:
+		  		applyMateState(dt);
+		  		break;
+			default:
+				break;
+		  	}
+			if(this.adjustPosition()) this.setState(State.NORMAL);
+			if(this.getEnergy() == 0.0 || this.getAge() > MAX_AGE_WOLF) this.setState(State.DEAD);
+			if(this.getState() != State.DEAD){
+				this.setEnergy(this.getEnergy()+this.getRegionMngr().getFood(this, dt));
 			}
 		}
+	}
+	
+	private void applyNormalState(double dt) {
+		if(this.getDestination().distanceTo(this.getPosition())< 8.0) {
+			setDest(Animal.createRandomPosition(this.getRegionMngr().getWidth() - 1, this.getRegionMngr().getHeight() - 1));
+		}
+		moveIn(dt);
+	}
+	
+	private void applyDangerState(double dt) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void applyMateState(double dt) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	@Override
