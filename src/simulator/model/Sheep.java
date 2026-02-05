@@ -107,6 +107,7 @@ public class Sheep extends Animal {
 		moveIn(dt);
 		if(this.dangerSource == null) {
 			//TODO getAnimalsInRange(...)
+			this.getRegionMngr().getAnimalsInRange(this, null);
 		}
 		if(this.dangerSource != null){
 			this.setState(State.DANGER);
@@ -261,17 +262,5 @@ public class Sheep extends Animal {
 		}else { 
 			this.setDesire(newDesire);
 		}
-	}
-
-
-
-		
-
-	
-
-	
-	
-	
-
-	
+	}	
 }

@@ -69,14 +69,21 @@ public abstract class Animal implements Entity, AnimalInfo{
 	void init(AnimalMapView regMngr) {
 		this.regionMngr = regMngr;
 		if(this.pos == null) {
-			this.pos = Vector2D.createRandomPosition(regionMngr.getWidth()-1, regionMngr.getHeight()-1);
+			this.pos = Animal.createRandomPosition(regionMngr.getWidth()-1, regionMngr.getHeight()-1);
 		} else { // TODO corregir este código para asegurar que siempre está en el mapa
+			double x = this.getPosition().getX();
+			double y = this.getPosition().getY();
+			int width = this.getRegionMngr().getWidth();
+			int height = this.getRegionMngr().getHeight();
+			
 			while (x >= width) x = (x - width);  
 			while (x < 0) x = (x + width);  
 			while (y >= height) y = (y - height);  
 			while (y < 0) y = (y + height);
+			
+		    this.pos = new Vector2D(x,y);
 		}
-		this.dest = Vector2D.createRandomPosition(regionMngr.getWidth()-1, regionMngr.getHeight()-1);
+		this.dest = Animal.createRandomPosition(regionMngr.getWidth()-1, regionMngr.getHeight()-1);
 	}
 	
 	Animal deliverBaby() {
