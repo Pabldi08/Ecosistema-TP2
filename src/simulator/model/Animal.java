@@ -28,8 +28,8 @@ public abstract class Animal implements Entity, AnimalInfo{
 		if(geneticCode.isBlank() || sightRange < 0 || initSpeed < 0 || mateStrategy.equals(null)) {
 			throw new IllegalArgumentException();
 		}
-		if(this.pos.equals(null)) {
-			// TODO: rellenar
+		if(this.pos == null) {
+			init(this.regionMngr);
 		}else {
 			this.pos = pos;
 		}
@@ -38,7 +38,7 @@ public abstract class Animal implements Entity, AnimalInfo{
 		this.state = State.NORMAL;
 		
 		this.dest = null;
-		this.energy = 100.0;
+		this.energy = Constants.INIT_ENERGY;
 		this.speed = Utils.getRandomizedParameter(initSpeed, 0.1);
 		this.age = 0.0;	
 		this.desire = 0.0;
@@ -53,20 +53,20 @@ public abstract class Animal implements Entity, AnimalInfo{
 		this.geneticCode = p1.geneticCode;
 		this.diet = p1.diet;
 		this.state = State.NORMAL;
-		this.pos = p1.getPosition().plus(Vector2D.getRandomVector(-1,1).scale(60.0*(Utils.RAND.nextGaussian()+1)));
+		this.pos = p1.getPosition().plus(Vector2D.getRandomVector(-1,1).scale(Constants.NEARBY_FACTOR *(Utils.RAND.nextGaussian()+1)));
 		this.dest = null;
 		this.energy = (p1.energy + p2.energy)/2;
-		this.speed = Utils.getRandomizedParameter((p1.getSpeed()+p2.getSpeed())/2, 0.2);
+		this.speed = Utils.getRandomizedParameter((p1.getSpeed()+p2.getSpeed())/2, Constants.MUTATION_TOLERANCE);
 		this.age = 0.0;	
 		this.desire = 0.0;
-		this.sightRange = Utils.getRandomizedParameter((p1.getSightRange()+p2.getSightRange())/2, 0.2);
+		this.sightRange = Utils.getRandomizedParameter((p1.getSightRange()+p2.getSightRange())/2, Constants.MUTATION_TOLERANCE);
 		this.mateTarget = null;
 		this.baby = null;
 		this.regionMngr = null;
 		this.mateStrategy = p2.mateStrategy;
 	}
 	
-	void init(AnimalMapView regMngr) { // TODO: revisar init
+	void init(AnimalMapView regMngr) { 
 		this.regionMngr = regMngr;
 		if(this.pos == null) {
 			this.pos = Animal.createRandomPosition(regionMngr.getWidth()-1, regionMngr.getHeight()-1);
@@ -149,6 +149,8 @@ public abstract class Animal implements Entity, AnimalInfo{
 		return archivo;
 	}
 	
+	
+	//TODO chequear si esto es correcto
 	public static Vector2D createRandomPosition(double width, double height) {
 
 	    double x = Utils.RAND.nextDouble() * width;
@@ -213,7 +215,14 @@ public abstract class Animal implements Entity, AnimalInfo{
 	public boolean isPregnant() {
 		return this.baby != null;
 	}
+	
+	public SelectionStrategy getMateStrategy() {
+		return mateStrategy;
+	}
+
+	
 	// Setters:
+	
 	
 	public void setBaby(Animal baby) {
 		this.baby = baby;
@@ -224,7 +233,7 @@ public abstract class Animal implements Entity, AnimalInfo{
 	}
 
 	public void setDesire(double desire) {
-		this.desire = Utils.constrainValueInRange(desire, 0.0, 100.0);
+		this.desire = Utils.constrainValueInRange(desire, 0.0, Constants.MAX_DESIRE);
 	}
 	
 	public void setAge(double age) {
@@ -232,7 +241,7 @@ public abstract class Animal implements Entity, AnimalInfo{
 	}
 
 	public void setEnergy(double energy) {
-		this.energy = Utils.constrainValueInRange(energy, 0.0, 100.0);
+		this.energy = Utils.constrainValueInRange(energy, 0.0, Constants.MAX_ENERGY);
 	}
 	
 	public void setDest(Vector2D dest) {
