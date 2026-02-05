@@ -153,7 +153,11 @@ public class Sheep extends Animal {
 			}
 			
 			if(this.getMateTarget().getPosition().distanceTo(this.getPosition()) < 8.0) {
-				
+				this.setDesire(0.0);
+				this.getMateTarget().setDesire(0.0);
+				// TODO:
+				// - Si el animal no lleva un bebé ya, con probabilidad de 0.9 va a llevar a un nuevo bebé usando new Sheep(this, mateTarget).
+				// - Poner mateTarget a null.
 			}
 		}
 			
