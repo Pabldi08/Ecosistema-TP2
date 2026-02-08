@@ -56,17 +56,20 @@ public class RegionManager implements AnimalMapView {
 	@Override
 	public List<Animal> getAnimalsInRange(Animal e, Predicate<Animal> filter) {
 		List<Animal> animalsInRange = new ArrayList<>();
+		
 		Vector2D leftSup = new Vector2D(e.getPosition().getX()-e.getSightRange(), e.getPosition().getY()-e.getSightRange());
 		Vector2D rightBot = new Vector2D(e.getPosition().getX()+e.getSightRange(), e.getPosition().getY()+e.getSightRange());
+		
 		int regionIniX = Math.max(0, (int) (leftSup.getX()/this.regionWidth)); // TODO: preguntar cast
 		int regionIniY = Math.max(0, (int) (leftSup.getY()/this.regionHeight));
 		int regionFinX = Math.min(regions.length - 1, (int) (rightBot.getX()/this.regionWidth));
 		int regionFinY = Math.min(regions[0].length - 1, (int) (rightBot.getY()/this.regionHeight));
+		
 		for(int i = regionIniX; i <= regionFinX; i++) {
 			for(int j = regionIniY; j <= regionFinY;j++) {
 				List<Animal> animalsInRegion = this.regions[i][j].getAnimals();
 				for(Animal a: animalsInRegion) {
-					if(a != e && e.isInSightRange(a) && filter.test(a)) animalsInRange.add(a);
+					if(!a.equals(e) && e.isInSightRange(a) && filter.test(a)) animalsInRange.add(a);
 				}
 			}
 		}
