@@ -51,7 +51,7 @@ public class Wolf extends Animal {
 		if(this.getDestination().distanceTo(this.getPosition())< Constants.COLLISION_RANGE) {
 			setDest(Animal.createRandomPosition(this.getRegionMngr().getWidth() - 1, this.getRegionMngr().getHeight() - 1));
 		}
-		moveIn(dt);
+		moveIn(dt, Constants.FOOD_DROP_RATE_WOLF, Constants.DESIRE_INCREASE_RATE_WOLF,1);
 		if(this.getEnergy() <Constants.FOOD_THRESHOLD_WOLF) this.setState(State.HUNGER);
 		else if(this.getDesire() > Constants.DESIRE_THRESHOLD_WOLF) this.setState(State.MATE);
 		
@@ -64,16 +64,10 @@ public class Wolf extends Animal {
 			this.huntTarget = this.huntingStrategy.select(this, animalsInRange);
 		}
 		if(this.huntTarget == null) {
-			moveIn(dt);
+			moveIn(dt, Constants.FOOD_DROP_RATE_WOLF, Constants.DESIRE_INCREASE_RATE_WOLF,1);
 		}else {
 			setDest(huntTarget.getPosition());
-			move(Constants.BOOST_FACTOR_WOLF*this.getSpeed()*dt*Math.exp((this.getEnergy()-Constants.MAX_ENERGY)*Constants.HUNGER_DECAY_EXP_FACTOR));
-			this.setAge(this.getAge() + dt);
-			double newEnergy = this.getEnergy()-Constants.FOOD_DROP_RATE_WOLF*Constants.FOOD_DROP_BOOST_FACTOR_WOLF*dt;
-			this.setEnergy(newEnergy);
-			
-			double newDesire = this.getDesire()+Constants.DESIRE_INCREASE_RATE_WOLF*dt;
-			this.setDesire(newDesire);
+			moveIn(dt, Constants.FOOD_DROP_RATE_WOLF*Constants.FOOD_DROP_BOOST_FACTOR_WOLF, Constants.DESIRE_INCREASE_RATE_WOLF,Constants.BOOST_FACTOR_WOLF);
 			if(this.getPosition().distanceTo(this.huntTarget.getPosition()) < Constants.COLLISION_RANGE) {
 				this.huntTarget.setState(State.DEAD);
 				this.huntTarget = null;
@@ -97,17 +91,11 @@ public class Wolf extends Animal {
 			List<Animal> animalsInRange = this.getRegionMngr().getAnimalsInRange(this, a-> a.getGeneticCode() == Constants.WOLF_GENETIC_CODE);
 			this.setMateTarget(this.getMateStrategy().select(this, animalsInRange));
 			if(this.getMateTarget() == null) {
-				moveIn(dt);
+				moveIn(dt, Constants.FOOD_DROP_RATE_WOLF, Constants.DESIRE_INCREASE_RATE_WOLF,1);
 			}
 		}else {
 			setDest(this.getMateTarget().getPosition());
-			move(Constants.BOOST_FACTOR_WOLF*this.getSpeed()*dt*Math.exp((this.getEnergy()- Constants.MAX_ENERGY)*Constants.HUNGER_DECAY_EXP_FACTOR));
-			this.setAge(this.getAge() + dt);
-			double newEnergy = this.getEnergy()-Constants.FOOD_DROP_RATE_WOLF*Constants.FOOD_DROP_BOOST_FACTOR_WOLF*dt;
-			this.setEnergy(newEnergy);
-			
-			double newDesire = this.getDesire()+Constants.DESIRE_INCREASE_RATE_WOLF*dt;
-			this.setDesire(newDesire);
+			moveIn(dt, Constants.FOOD_DROP_RATE_WOLF*Constants.FOOD_DROP_BOOST_FACTOR_WOLF, Constants.DESIRE_INCREASE_RATE_WOLF,Constants.BOOST_FACTOR_WOLF);
 			if(this.getPosition().distanceTo(this.getMateTarget().getPosition()) < Constants.COLLISION_RANGE) {
 				this.setDesire(0.0);
 				this.getMateTarget().setDesire(0.0);
@@ -146,17 +134,6 @@ public class Wolf extends Animal {
 
 	@Override
 	protected void setDeadStateAction() {}
-	
-	private void moveIn(double dt) {
-		this.move(this.getSpeed()*dt*Math.exp((this.getEnergy()-Constants.MAX_ENERGY)*Constants.HUNGER_DECAY_EXP_FACTOR));
-		this.setAge(this.getAge()+dt);
-		
-		double newEnergy = this.getEnergy() - Constants.FOOD_DROP_RATE_WOLF * dt;
-		this.setEnergy(newEnergy);
-		
-		double newDesire = this.getDesire() + Constants.DESIRE_INCREASE_RATE_WOLF * dt; 
-		this.setDesire(newDesire);
-	}	
 	
 	
 	

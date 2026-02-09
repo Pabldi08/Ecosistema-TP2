@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+
 import simulator.misc.Vector2D;
 
 public class RegionManager implements AnimalMapView {
@@ -42,15 +45,39 @@ public class RegionManager implements AnimalMapView {
 	void setRegion(int row, int col, Region r) {
 		r.setAnimals(regions[row][col].getAnimals());
 		this.regions[row][col] = r;
-		// TODO: y actualiza sus entradas en animalRegion
+		for(Animal a: regions[row][col].getAnimals()) {
+			animalRegion.put(a, r);
+		}
 	}
-
 	
-
+	void registerAnimal(Animal a) {
+		getRegion(a).addAnimal(a);
+		this.animalRegion.put(a,getRegion(a));
+		a.init(this);
+	}
+	
+	void unregisterAnimal(Animal a) {
+		this.animalRegion.get(a).removeAnimal(a);
+		this.animalRegion.remove(a);
+	}
+	
+	void updateAnimalRegion(Animal a) {
+		if(!getRegion(a).equals(animalRegion.get(a))) {
+			this.animalRegion.put(a, getRegion(a));
+		}
+	}
+	
 	@Override
 	public double getFood(AnimalInfo a, double dt) {
-		// TODO Auto-generated method stub
-		return 0;
+		return this.animalRegion.get(a).getFood(a, dt);
+	}
+	
+	void updateAllRegions(double dt) {
+		for(Region[] x: regions) {
+			for(Region r: x) {
+				r.update(dt);
+			}
+		}
 	}
 
 	@Override
@@ -58,7 +85,7 @@ public class RegionManager implements AnimalMapView {
 		List<Animal> animalsInRange = new ArrayList<>();
 		Vector2D leftSup = new Vector2D(e.getPosition().getX()-e.getSightRange(), e.getPosition().getY()-e.getSightRange());
 		Vector2D rightBot = new Vector2D(e.getPosition().getX()+e.getSightRange(), e.getPosition().getY()+e.getSightRange());
-		int regionIniX = Math.max(0, (int) (leftSup.getX()/this.regionWidth)); // TODO: preguntar cast
+		int regionIniX = Math.max(0, (int) (leftSup.getX()/this.regionWidth));
 		int regionIniY = Math.max(0, (int) (leftSup.getY()/this.regionHeight));
 		int regionFinX = Math.min(regions.length - 1, (int) (rightBot.getX()/this.regionWidth));
 		int regionFinY = Math.min(regions[0].length - 1, (int) (rightBot.getY()/this.regionHeight));
@@ -71,6 +98,29 @@ public class RegionManager implements AnimalMapView {
 			}
 		}
 		return animalsInRange;
+	}
+	
+	public JSONObject asJSON() {
+		JSONObject obj = new JSONObject();
+		JSONArray arr = new JSONArray();
+		for(int i = 0; i < regions.length; i++) {
+			for(int j = 0; j < regions[i].length; j++) {
+				JSONObject aux = new JSONObject();
+				aux.put("row",i);
+				aux.put("col",j);
+				aux.put("data", regions[i][j].asJSON());
+				arr.put(aux);
+			}
+			
+		}
+		obj.put("regions", arr);
+		return obj;
+	}
+	
+	private Region getRegion (Animal a) {
+		int x = (int) a.getPosition().getX()/this.regionWidth;
+		int y = (int) a.getPosition().getY()/this.regionHeight;
+		return this.regions[y][x];
 	}
 	
 	//GETTERS

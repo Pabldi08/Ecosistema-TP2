@@ -121,7 +121,7 @@ public abstract class Animal implements Entity, AnimalInfo{
 	  }
 }
 	
-	public boolean isInSightRange(Animal a) { //TODO: preguntar si se puede hacer pública
+	protected boolean isInSightRange(Animal a) {
 		return a.getPosition().distanceTo(this.getPosition()) <= this.getSightRange();
 	}
 	
@@ -149,8 +149,17 @@ public abstract class Animal implements Entity, AnimalInfo{
 		return archivo;
 	}
 	
+	protected void moveIn(double dt, double foodDropRate, double desireIncreaseRate, double speedFactor) {
+		this.move(speedFactor*this.getSpeed()*dt*Math.exp((this.getEnergy()-Constants.MAX_ENERGY)*Constants.HUNGER_DECAY_EXP_FACTOR));
+		this.setAge(this.getAge()+dt);
+		
+		double newEnergy = this.getEnergy() - foodDropRate * dt;
+		this.setEnergy(newEnergy);
+		
+		double newDesire = this.getDesire() + desireIncreaseRate * dt; 
+		this.setDesire(newDesire);
+	}
 	
-	//TODO chequear si esto es correcto
 	public static Vector2D createRandomPosition(double width, double height) {
 
 	    double x = Utils.RAND.nextDouble() * width;

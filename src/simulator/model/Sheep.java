@@ -51,7 +51,7 @@ public class Sheep extends Animal {
 		if(this.getDestination().distanceTo(this.getPosition())< Constants.COLLISION_RANGE) {
 			setDest(Animal.createRandomPosition(this.getRegionMngr().getWidth() - 1, this.getRegionMngr().getHeight() - 1));
 		}
-		moveIn(dt); // TODO: subir a Animal y hacer genérico
+		moveIn(dt, Constants.FOOD_DROP_RATE_SHEEP, Constants.DESIRE_INCREASE_RATE_SHEEP, 1);
 		if(this.dangerSource == null) {
 			List<Animal> animalsInRange = this.getRegionMngr().getAnimalsInRange(this, (a)-> a.getDiet() == Diet.CARNIVORE);
 			this.dangerSource = this.dangerStrategy.select(this, animalsInRange);
@@ -70,17 +70,10 @@ public class Sheep extends Animal {
 			this.dangerSource = null;
 		}
 		if(this.dangerSource == null) {
-			moveIn(dt);
+			moveIn(dt, Constants.FOOD_DROP_RATE_SHEEP, Constants.DESIRE_INCREASE_RATE_SHEEP,1);
 		}else {
 			this.setDest(this.getPosition().plus(this.getPosition().minus(dangerSource.getPosition()).direction()));
-			this.move(Constants.BOOST_FACTOR_SHEEP*this.getSpeed()*dt*Math.exp((this.getEnergy()-Constants.MAX_ENERGY)*Constants.HUNGER_DECAY_EXP_FACTOR));
-			this.setAge(this.getAge()+dt); 
-			
-			double newEnergy = this.getEnergy() - Constants.FOOD_DROP_RATE_SHEEP * Constants.FOOD_DROP_BOOST_FACTOR_SHEEP*dt;
-			this.setEnergy(newEnergy);
-			
-			double newDesire = this.getDesire() + Constants.DESIRE_INCREASE_RATE_SHEEP*dt;//1.v
-			this.setDesire(newDesire);
+			moveIn(dt, Constants.FOOD_DROP_RATE_WOLF*Constants.FOOD_DROP_BOOST_FACTOR_WOLF, Constants.DESIRE_INCREASE_RATE_WOLF,Constants.BOOST_FACTOR_SHEEP);
 		}
 		if(this.dangerSource == null || !isInSightRange(this.dangerSource)) {
 			List<Animal> animalsInRange = this.getRegionMngr().getAnimalsInRange(this, (a)-> a.getDiet() == Diet.CARNIVORE);
@@ -99,18 +92,10 @@ public class Sheep extends Animal {
 		if(this.getMateTarget() == null){
 			List<Animal> animalsInRange = this.getRegionMngr().getAnimalsInRange(this, (a)-> a.getGeneticCode() == Constants.SHEEP_GENETIC_CODE);
 			this.setMateTarget(this.getMateStrategy().select(this, animalsInRange));
-			if(this.getMateTarget() == null) moveIn(dt);
+			if(this.getMateTarget() == null) moveIn(dt, Constants.FOOD_DROP_RATE_SHEEP, Constants.DESIRE_INCREASE_RATE_SHEEP, 1);
 		} else {
 			this.setDest(this.getMateTarget().getPosition()); //2.i
-			this.move(Constants.BOOST_FACTOR_SHEEP*this.getSpeed()*dt*Math.exp((this.getEnergy()-Constants.MAX_ENERGY)*Constants.HUNGER_DECAY_EXP_FACTOR)); // 2.ii
-			this.setAge(this.getAge()+dt); //2.iii
-			
-			double newEnergy = this.getEnergy() - Constants.FOOD_DROP_RATE_SHEEP * Constants.FOOD_DROP_BOOST_FACTOR_SHEEP*dt; //2. iv
-			this.setEnergy(newEnergy);			
-			
-			double newDesire = this.getDesire() + Constants.DESIRE_INCREASE_RATE_SHEEP*dt;//2.v
-			this.setDesire(newDesire);
-	
+			moveIn(dt, Constants.FOOD_DROP_RATE_WOLF*Constants.FOOD_DROP_BOOST_FACTOR_WOLF, Constants.DESIRE_INCREASE_RATE_WOLF,Constants.BOOST_FACTOR_SHEEP);
 			if(this.getMateTarget().getPosition().distanceTo(this.getPosition()) < Constants.COLLISION_RANGE) {
 				this.setDesire(0.0);
 				this.getMateTarget().setDesire(0.0);
@@ -151,15 +136,4 @@ public class Sheep extends Animal {
 
 	@Override
 	protected void setDeadStateAction() {}
-	
-	private void moveIn(double dt) {
-		this.move(this.getSpeed()*dt*Math.exp((this.getEnergy()-Constants.MAX_ENERGY)*Constants.HUNGER_DECAY_EXP_FACTOR));
-		this.setAge(this.getAge()+dt);
-		
-		double newEnergy = this.getEnergy() - Constants.FOOD_DROP_RATE_SHEEP * dt;
-		this.setEnergy(newEnergy);
-		
-		double newDesire = this.getDesire() + Constants.DESIRE_INCREASE_RATE_SHEEP * dt; 
-		this.setDesire(newDesire);
-	}	
 }
