@@ -32,14 +32,7 @@ public class Simulator implements JSONable {
 	}
 	
 	void setRegion(int row, int col, JSONObject rJson) {
-		Region R = new DefaultRegion();
-		JSONArray animals = rJson.getJSONArray("animals");
-		Iterator<Object> it = animals.iterator();
-		while(it.hasNext()) {
-			JSONObject animal = (JSONObject) it.next();
-			this.addAnimal(animal);
-			//R.addAnimal();
-		}
+		Region R = this.regionsFactory.createInstance(rJson);
 		this.setRegion(row, col, R);
 	}
 	
@@ -49,14 +42,8 @@ public class Simulator implements JSONable {
 	}
 	
 	public void addAnimal(JSONObject aJson) {
-		JSONArray pos = animal.getJSONArray("pos");
-		Vector2D position = new Vector2D(pos.getDouble(0),pos.getDouble(1));
-		String gcode = animal.getString("gcode");
-		String diet = animal.getString("diet");
-		String state = animal.getString("state");
-		Diet dieta = Diet.stringToEnum(diet); // TODO: completar el new Animal
-		State estado = State.stringToEnum(state);
-		Animal a = new Animal(gcode,Diet.stringToEnum(diet),20.0,21.0,null,position);
+		Animal a = this.animalsFactory.createInstance(aJson);
+		this.addAnimal(a);
 	}
 	
 }

@@ -15,12 +15,12 @@ public class SheepBuilder extends Builder<Sheep> {
     }
 
     @Override
-    protected Sheep createInstance(JSONObject data) { //TODO: qué recibe en data
+    protected Sheep createInstance(JSONObject data) {
     	
         if (data == null) {
             throw new IllegalArgumentException("Sheep: 'data' cannot be null");
         }
-        // debe ser vacío según el enunciado
+        
         if (data.length() != 3) {
             throw new IllegalArgumentException(
                 "Sheep: 'data' must have 3 keys, but was: " + data.toString()

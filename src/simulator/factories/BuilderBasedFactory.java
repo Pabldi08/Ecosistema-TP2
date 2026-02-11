@@ -15,7 +15,6 @@ public class BuilderBasedFactory<T> implements Factory<T> {
 	public BuilderBasedFactory() {  
 		this.builders = new HashMap<>();
 		this.buildersInfo = new LinkedList<>();
-      // …  
 	}
 
 	public BuilderBasedFactory(List<Builder<T>> builders) {  
@@ -23,7 +22,6 @@ public class BuilderBasedFactory<T> implements Factory<T> {
 		for(Builder<T> b: builders) {
 			this.addBuilder(b);
 		}
-       // …  
 	}
 
 	public void addBuilder(Builder<T> b) {  
