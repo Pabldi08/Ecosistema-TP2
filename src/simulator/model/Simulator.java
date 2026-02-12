@@ -3,6 +3,7 @@ package simulator.model;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Collections;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -46,4 +47,15 @@ public class Simulator implements JSONable {
 		this.addAnimal(a);
 	}
 	
+	public MapInfo getMapInfo() {
+		return this.rgnMngr;
+	}
+	
+	public List<? extends AnimalInfo> getAnimals(){
+		return Collections.unmodifiableList(this.simulatedAnimals);
+	}
+	
+	public double getTime() {
+		return this.dt;
+	}
 }

@@ -13,8 +13,7 @@ public class SelectFirstBuilder extends Builder<SelectionStrategy> {
     }
 
     @Override
-    protected SelectionStrategy createInstance(JSONObject data) { //TODO: qué recibe en data
-    	
+    protected SelectionStrategy createInstance(JSONObject data) {     	
         if (data == null) {
             throw new IllegalArgumentException("SelectFirstBuilder: 'data' cannot be null");
         }
