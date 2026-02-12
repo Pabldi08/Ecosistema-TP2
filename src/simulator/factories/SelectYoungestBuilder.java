@@ -11,7 +11,7 @@ public class SelectYoungestBuilder extends Builder<SelectionStrategy> {
     }
 
     @Override
-    protected SelectionStrategy createInstance(JSONObject data) { //TODO: qué recibe en data
+    protected SelectionStrategy createInstance(JSONObject data) {
     	
         if (data == null) {
             throw new IllegalArgumentException("SelectYoungestBuilder: 'data' cannot be null");

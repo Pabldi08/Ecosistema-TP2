@@ -16,12 +16,12 @@ public class Simulator implements JSONable {
 	private Factory<Animal> animalsFactory;
 	private Factory<Region> regionsFactory;
 	private RegionManager rgnMngr;
-	private double dt;
+	private double time;
 	private List<Animal> simulatedAnimals;
 	
 	public Simulator(int cols, int rows, int width, int height,   
             Factory<Animal> animalsFactory, Factory<Region> regionsFactory) {
-		this.dt = 0.0;
+		this.time = 0.0;
 		this.simulatedAnimals = new ArrayList<>();
 		this.animalsFactory = animalsFactory;
 		this.regionsFactory = regionsFactory;
@@ -32,8 +32,8 @@ public class Simulator implements JSONable {
 		this.rgnMngr.setRegion(row, col, r);
 	}
 	
-	void setRegion(int row, int col, JSONObject rJson) {
-		Region R = this.regionsFactory.createInstance(rJson);
+	public void setRegion(int row, int col, JSONObject rJson) {		
+		Region R = this.regionsFactory.createInstance(rJson);	
 		this.setRegion(row, col, R);
 	}
 	
@@ -56,6 +56,45 @@ public class Simulator implements JSONable {
 	}
 	
 	public double getTime() {
-		return this.dt;
+		return this.time;
 	}
+	
+	public void advance(double dt) {
+		this.time += dt;						//i
+		
+		List<Animal> aux = new ArrayList<>();	//ii
+		for(Animal a: this.simulatedAnimals) {	
+			if(a.getState() == State.DEAD) {
+				aux.add(a);
+				this.rgnMngr.unregisterAnimal(a);
+			}
+		}
+		this.simulatedAnimals.removeAll(aux);
+		
+		for(Animal a: this.simulatedAnimals) {	//iii
+			a.update(dt);
+			this.rgnMngr.updateAnimalRegion(a);
+		}
+		this.rgnMngr.updateAllRegions(dt);
+		
+		aux.clear();
+		for(Animal a: this.simulatedAnimals) {	//iv
+			if(a.isPregnant()) {
+				Animal baby = a.deliverBaby();
+				aux.add(baby);
+			}
+		}
+		for(Animal a: aux) {
+			addAnimal(a);
+		}
+	}
+	
+	public JSONObject asJSON() {
+		JSONObject obj = new JSONObject();
+		obj.put("time", this.time);
+		obj.put("state", this.rgnMngr.asJSON());
+		return obj;
+	}
+	
+	
 }

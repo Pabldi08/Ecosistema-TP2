@@ -3,6 +3,9 @@ package simulator.launcher;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -13,7 +16,12 @@ import org.apache.commons.cli.ParseException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
+import simulator.factories.Builder;
+import simulator.factories.BuilderBasedFactory;
+import simulator.factories.Factory;
 import simulator.misc.Utils;
+import simulator.model.SelectionStrategy;
+import simulator.factories.*;
 
 public class Main {
 
@@ -38,7 +46,7 @@ public class Main {
 	}
 
 	// default values for some parameters
-	//
+	
 	private final static Double DEFAULT_TIME = 10.0; // in seconds
 
 	// some attributes to stores values corresponding to command-line parameters
@@ -124,6 +132,20 @@ public class Main {
 	}
 
 	private static void initFactories() {
+		//Inicializa las factorias de estrategia
+		List<Builder<SelectionStrategy>> selectionStrategyBuilders = new ArrayList<>();  
+		selectionStrategyBuilders.add(new SelectFirstBuilder());  
+		selectionStrategyBuilders.add(new SelectClosestBuilder());  
+		selectionStrategyBuilders.add(new SelectYoungestBuilder());  
+		Factory<SelectionStrategy> selectionStrategyFactory = new BuilderBasedFactory<SelectionStrategy>(selectionStrategyBuilders);
+		
+		List<Builder<SelectionStrategy>> selectionStrategyBuilders = new ArrayList<>();  
+		selectionStrategyBuilders.add(new SelectFirstBuilder());  
+		selectionStrategyBuilders.add(new SelectClosestBuilder());  
+		selectionStrategyBuilders.add(new SelectYoungestBuilder());  
+		Factory<SelectionStrategy> selectionStrategyFactory = new BuilderBasedFactory<SelectionStrategy>(selectionStrategyBuilders);
+		
+		
 	}
 
 	private static JSONObject loadJSONFile(InputStream in) {

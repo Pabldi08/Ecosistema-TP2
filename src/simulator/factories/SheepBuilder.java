@@ -10,8 +10,14 @@ import simulator.model.SelectionStrategy;
 import simulator.model.Sheep;
 
 public class SheepBuilder extends Builder<Sheep> {
-	public SheepBuilder() {
+	
+	private BuilderBasedFactory<SelectionStrategy> bbf;	//TODO: Hay que crear el parametro??
+	//Literalmente pone esto
+	//Nótese que este builder requiere acceso a una factoría de estrategias (hay que pasarla como parámetro a la constructora).
+	
+	public SheepBuilder(BuilderBasedFactory<SelectionStrategy> bbf) {
         super("sheep", "Creates a sheep");
+        this.bbf = bbf;
     }
 
     @Override
@@ -30,12 +36,12 @@ public class SheepBuilder extends Builder<Sheep> {
     		SelectionStrategy dangerStrategy = new SelectFirst();
     		Vector2D position = null;
     		
-    		if(!data.isNull("mate_strategy")) {
-    			BuilderBasedFactory<SelectionStrategy> bbf = new BuilderBasedFactory<SelectionStrategy>();
+    		if(!data.isNull("mate_strategy")) {  //TODO borrar
+    			//BuilderBasedFactory<SelectionStrategy> bbf = new BuilderBasedFactory<SelectionStrategy>();
     			mateStrategy = bbf.createInstance(data.getJSONObject("mate_strategy"));
     		}
     		if(!data.isNull("danger_strategy")) {
-    			BuilderBasedFactory<SelectionStrategy> bbf = new BuilderBasedFactory<SelectionStrategy>();
+    			//BuilderBasedFactory<SelectionStrategy> bbf = new BuilderBasedFactory<SelectionStrategy>();
     			dangerStrategy = bbf.createInstance(data.getJSONObject("danger_strategy"));
     		}
     		if(!data.isNull("pos")) {

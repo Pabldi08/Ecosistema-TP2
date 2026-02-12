@@ -11,9 +11,12 @@ import simulator.model.Sheep;
 import simulator.model.Wolf;
 
 public class WolfBuilder extends Builder<Wolf> {
+	
+	private BuilderBasedFactory<SelectionStrategy> bbf;
 
-	public WolfBuilder() {
+	public WolfBuilder(BuilderBasedFactory<SelectionStrategy> bbf) {
 		super("wolf", "Creates a wolf");
+		this.bbf = bbf;
 	}
 
 	@Override
@@ -31,12 +34,12 @@ public class WolfBuilder extends Builder<Wolf> {
     		SelectionStrategy dangerStrategy = new SelectFirst();
     		Vector2D position = null;
     		
-    		if(!data.isNull("mate_strategy")) {
-    			BuilderBasedFactory<SelectionStrategy> bbf = new BuilderBasedFactory<SelectionStrategy>();
+    		if(!data.isNull("mate_strategy")) { //TODO: Borrar en caso de que si
+    			//BuilderBasedFactory<SelectionStrategy> bbf = new BuilderBasedFactory<SelectionStrategy>();
     			mateStrategy = bbf.createInstance(data.getJSONObject("mate_strategy"));
     		}
     		if(!data.isNull("danger_strategy")) {
-    			BuilderBasedFactory<SelectionStrategy> bbf = new BuilderBasedFactory<SelectionStrategy>();
+    			//BuilderBasedFactory<SelectionStrategy> bbf = new BuilderBasedFactory<SelectionStrategy>();
     			dangerStrategy = bbf.createInstance(data.getJSONObject("danger_strategy"));
     		}
     		if(!data.isNull("pos")) {
