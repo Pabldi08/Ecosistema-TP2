@@ -5,16 +5,17 @@ import org.json.JSONObject;
 
 import simulator.misc.Utils;
 import simulator.misc.Vector2D;
+import simulator.model.Animal;
 import simulator.model.SelectFirst;
 import simulator.model.SelectionStrategy;
 import simulator.model.Sheep;
 import simulator.model.Wolf;
 
-public class WolfBuilder extends Builder<Wolf> {
+public class WolfBuilder extends Builder<Animal> {
 	
-	private BuilderBasedFactory<SelectionStrategy> bbf;
+	private Factory<SelectionStrategy> bbf;
 
-	public WolfBuilder(BuilderBasedFactory<SelectionStrategy> bbf) {
+	public WolfBuilder(Factory<SelectionStrategy> bbf) {
 		super("wolf", "Creates a wolf");
 		this.bbf = bbf;
 	}
@@ -25,7 +26,7 @@ public class WolfBuilder extends Builder<Wolf> {
         if (data == null) {
             throw new IllegalArgumentException("Wolf: 'data' cannot be null");
         }
-        if (data.length() != 3) {
+        if (data.length() > 3) {
             throw new IllegalArgumentException(
                 "Wolf: 'data' must have 3 keys, but was: " + data.toString()
             );

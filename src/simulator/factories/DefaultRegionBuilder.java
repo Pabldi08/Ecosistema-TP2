@@ -8,7 +8,7 @@ import simulator.model.SelectFirst;
 
 public class DefaultRegionBuilder extends Builder<Region>{
 
-	public DefaultRegionBuilder(String typeTag, String desc) {
+	public DefaultRegionBuilder() {
 		super("default", "Creates a default region");
 	}
 

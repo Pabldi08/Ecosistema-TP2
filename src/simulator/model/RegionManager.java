@@ -51,9 +51,9 @@ public class RegionManager implements AnimalMapView {
 	}
 	
 	void registerAnimal(Animal a) {
+		a.init(this);
 		getRegion(a).addAnimal(a);
 		this.animalRegion.put(a,getRegion(a));
-		a.init(this);
 	}
 	
 	void unregisterAnimal(Animal a) {

@@ -28,11 +28,7 @@ public abstract class Animal implements Entity, AnimalInfo{
 		if(geneticCode.isBlank() || sightRange < 0 || initSpeed < 0 || mateStrategy.equals(null)) {
 			throw new IllegalArgumentException();
 		}
-		if(this.pos == null) {
-			init(this.regionMngr);
-		}else {
-			this.pos = pos;
-		}
+		this.pos = pos;
 		this.geneticCode = geneticCode;
 		this.diet = diet;
 		this.state = State.NORMAL;

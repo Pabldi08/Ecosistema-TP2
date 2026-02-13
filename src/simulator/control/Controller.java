@@ -88,22 +88,21 @@ public class Controller {
 		obj.put("out", finalState);
 		
 		//TODO: Como escribimos en out, asi se hacia en TP1 por lo menos??
-		try (OutputStreamWriter writer = new OutputStreamWriter(out)) {
+		/*try (OutputStreamWriter writer = new OutputStreamWriter(out)) {
 		    obj.write(writer); 
 		    writer.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
-		
 		try {
 			out.write(obj.toString().getBytes());
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
+		}*/
 		
 		PrintStream p = new PrintStream(out);
-		p.println(obj.toString());
+		p.println(obj.toString(0));
 		
 		if (sv) view.close();
 	}

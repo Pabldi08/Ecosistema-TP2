@@ -5,17 +5,18 @@ import org.json.JSONObject;
 
 import simulator.misc.Utils;
 import simulator.misc.Vector2D;
+import simulator.model.Animal;
 import simulator.model.SelectFirst;
 import simulator.model.SelectionStrategy;
 import simulator.model.Sheep;
 
-public class SheepBuilder extends Builder<Sheep> {
+public class SheepBuilder extends Builder<Animal> {
 	
-	private BuilderBasedFactory<SelectionStrategy> bbf;	//TODO: Hay que crear el parametro??
+	private Factory<SelectionStrategy> bbf;	//TODO: Hay que crear el parametro??
 	//Literalmente pone esto
 	//Nótese que este builder requiere acceso a una factoría de estrategias (hay que pasarla como parámetro a la constructora).
 	
-	public SheepBuilder(BuilderBasedFactory<SelectionStrategy> bbf) {
+	public SheepBuilder(Factory<SelectionStrategy> bbf) {
         super("sheep", "Creates a sheep");
         this.bbf = bbf;
     }
@@ -27,7 +28,7 @@ public class SheepBuilder extends Builder<Sheep> {
             throw new IllegalArgumentException("Sheep: 'data' cannot be null");
         }
         
-        if (data.length() != 3) {
+        if (data.length() > 3) {
             throw new IllegalArgumentException(
                 "Sheep: 'data' must have 3 keys, but was: " + data.toString()
             );
