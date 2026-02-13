@@ -11,13 +11,11 @@ import simulator.model.SelectionStrategy;
 import simulator.model.Sheep;
 import simulator.model.Wolf;
 
-public class WolfBuilder extends Builder<Animal> {
+public class WolfBuilder extends AnimalBuilder {
 	
-	private Factory<SelectionStrategy> bbf;
 
 	public WolfBuilder(Factory<SelectionStrategy> bbf) {
-		super("wolf", "Creates a wolf");
-		this.bbf = bbf;
+		super("wolf", "Creates a wolf", bbf);
 	}
 
 	@Override
@@ -28,29 +26,12 @@ public class WolfBuilder extends Builder<Animal> {
         }
         if (data.length() > 3) {
             throw new IllegalArgumentException(
-                "Wolf: 'data' must have 3 keys, but was: " + data.toString()
+                "Wolf: 'data' must have 3 or less keys, but was: " + data.toString()
             );
         } else {
-    		SelectionStrategy mateStrategy = new SelectFirst();
-    		SelectionStrategy dangerStrategy = new SelectFirst();
-    		Vector2D position = null;
-    		
-    		if(!data.isNull("mate_strategy")) { //TODO: Borrar en caso de que si
-    			//BuilderBasedFactory<SelectionStrategy> bbf = new BuilderBasedFactory<SelectionStrategy>();
-    			mateStrategy = bbf.createInstance(data.getJSONObject("mate_strategy"));
-    		}
-    		if(!data.isNull("danger_strategy")) {
-    			//BuilderBasedFactory<SelectionStrategy> bbf = new BuilderBasedFactory<SelectionStrategy>();
-    			dangerStrategy = bbf.createInstance(data.getJSONObject("danger_strategy"));
-    		}
-    		if(!data.isNull("pos")) {
-        		JSONObject pos = data.getJSONObject("pos");
-        		JSONArray xRange = pos.getJSONArray("x_range");
-        		JSONArray yRange = pos.getJSONArray("y_range");
-        		double X = xRange.getDouble(0) + (Utils.RAND.nextDouble() * (xRange.getDouble(1)-xRange.getDouble(0)));
-        		double Y = yRange.getDouble(0) + (Utils.RAND.nextDouble() * (yRange.getDouble(1)-yRange.getDouble(0)));
-        		position = new Vector2D(X,Y);
-    		}	
+        	SelectionStrategy mateStrategy = this.getStrategy(data, "mate_strategy");
+    		SelectionStrategy dangerStrategy = this.getStrategy(data, "danger_strategy");
+    		Vector2D position = this.getPosition(data);
             return new Wolf(mateStrategy, dangerStrategy, position);
         }
 	}

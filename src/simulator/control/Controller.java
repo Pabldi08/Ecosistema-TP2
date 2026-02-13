@@ -102,7 +102,7 @@ public class Controller {
 		}*/
 		
 		PrintStream p = new PrintStream(out);
-		p.println(obj.toString(0));
+		p.println(obj.toString(2));
 		
 		if (sv) view.close();
 	}
