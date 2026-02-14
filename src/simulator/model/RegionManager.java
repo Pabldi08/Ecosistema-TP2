@@ -33,8 +33,8 @@ public class RegionManager implements AnimalMapView {
 		this.regionHeight = height/rows;
 		
 		this.regions = new Region[rows][cols];
-		for(int i = 0; i < regions.length; i++) {
-			for(int j = 0; j < regions[i].length;j++) {
+		for(int i = 0; i < rows; i++) {
+			for(int j = 0; j < cols;j++) {
 				this.regions[i][j] = new DefaultRegion();
 			}
 		}
@@ -62,8 +62,12 @@ public class RegionManager implements AnimalMapView {
 	}
 	
 	void updateAnimalRegion(Animal a) {
-		if(!getRegion(a).equals(animalRegion.get(a))) {
-			this.animalRegion.put(a, getRegion(a));
+		Region newRegion = getRegion(a);
+		Region oldRegion = animalRegion.get(a);
+		if(!newRegion.equals(oldRegion)) {
+			newRegion.addAnimal(a);
+			oldRegion.removeAnimal(a);
+			this.animalRegion.put(a, newRegion);
 		}
 	}
 	
