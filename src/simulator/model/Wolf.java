@@ -59,7 +59,7 @@ public class Wolf extends Animal {
 	
 	
 	private void applyHungerState(double dt) {
-		if(this.huntTarget == null || (this.huntTarget != null && this.getState() == State.DEAD) || this.isInSightRange(huntTarget)) {
+		if(this.huntTarget == null || (this.huntTarget != null && this.huntTarget.getState() == State.DEAD) || !this.isInSightRange(huntTarget)) {
 			List<Animal> animalsInRange = this.getRegionMngr().getAnimalsInRange(this, a -> a.getDiet() == Diet.HERBIVORE);
 			this.huntTarget = this.huntingStrategy.select(this, animalsInRange);
 		}
@@ -84,7 +84,7 @@ public class Wolf extends Animal {
 	}
 
 	private void applyMateState(double dt) {
-		if(this.getMateTarget() != null && (this.getMateTarget().getState() == State.DEAD) || !isInSightRange(this.getMateTarget()))  {
+		if(this.getMateTarget() != null && (this.getMateTarget().getState() == State.DEAD || !isInSightRange(this.getMateTarget())))  {
 			this.setMateTarget(null);
 		}
 		if(this.getMateTarget() == null) {

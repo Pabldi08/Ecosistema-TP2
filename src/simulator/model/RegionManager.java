@@ -87,11 +87,11 @@ public class RegionManager implements AnimalMapView {
 		Vector2D rightBot = new Vector2D(e.getPosition().getX()+e.getSightRange(), e.getPosition().getY()+e.getSightRange());
 		int regionIniX = Math.max(0, (int) (leftSup.getX()/this.regionWidth));
 		int regionIniY = Math.max(0, (int) (leftSup.getY()/this.regionHeight));
-		int regionFinX = Math.min(regions.length - 1, (int) (rightBot.getX()/this.regionWidth));
-		int regionFinY = Math.min(regions[0].length - 1, (int) (rightBot.getY()/this.regionHeight));
+		int regionFinX = Math.min(regions[0].length - 1, (int) (rightBot.getX()/this.regionWidth));
+		int regionFinY = Math.min(regions.length - 1, (int) (rightBot.getY()/this.regionHeight));
 		for(int i = regionIniX; i <= regionFinX; i++) {
 			for(int j = regionIniY; j <= regionFinY;j++) {
-				List<Animal> animalsInRegion = this.regions[i][j].getAnimals();
+				List<Animal> animalsInRegion = this.regions[j][i].getAnimals();
 				for(Animal a: animalsInRegion) {
 					if(a != e && e.isInSightRange(a) && filter.test(a)) animalsInRange.add(a);
 				}

@@ -73,7 +73,7 @@ public class Sheep extends Animal {
 			moveIn(dt, Constants.FOOD_DROP_RATE_SHEEP, Constants.DESIRE_INCREASE_RATE_SHEEP,1);
 		}else {
 			this.setDest(this.getPosition().plus(this.getPosition().minus(dangerSource.getPosition()).direction()));
-			moveIn(dt, Constants.FOOD_DROP_RATE_WOLF*Constants.FOOD_DROP_BOOST_FACTOR_WOLF, Constants.DESIRE_INCREASE_RATE_WOLF,Constants.BOOST_FACTOR_SHEEP);
+			moveIn(dt, Constants.FOOD_DROP_RATE_SHEEP*Constants.FOOD_DROP_BOOST_FACTOR_SHEEP, Constants.DESIRE_INCREASE_RATE_SHEEP,Constants.BOOST_FACTOR_SHEEP);
 		}
 		if(this.dangerSource == null || !isInSightRange(this.dangerSource)) {
 			List<Animal> animalsInRange = this.getRegionMngr().getAnimalsInRange(this, (a)-> a.getDiet() == Diet.CARNIVORE);
@@ -84,9 +84,11 @@ public class Sheep extends Animal {
 			}
 		}
 	}
-	
+	/* TODO: contradicción si "pero en el diagrama de flujo de MATE EN SHEEP independientemente del hito 1, si se cumple que "mateTarget es null?" y tras "buscar un animal para emparejarse",
+	  no se cumple ahora que"mateTarget es null?", llega al hito 3 sin haberse movido, y a partir de ahí ya no hay forma de que se mueva en ese flujo, no?
+	*/ 
 	private void applyMateState(double dt) {
-		if(this.getMateTarget() != null && (this.getMateTarget().getState() == State.DEAD) || !isInSightRange(this.getMateTarget()))  {
+		if(this.getMateTarget() != null && (this.getMateTarget().getState() == State.DEAD || !isInSightRange(this.getMateTarget())))  {
 			this.setMateTarget(null);
 		}
 		if(this.getMateTarget() == null){
@@ -95,7 +97,7 @@ public class Sheep extends Animal {
 			if(this.getMateTarget() == null) moveIn(dt, Constants.FOOD_DROP_RATE_SHEEP, Constants.DESIRE_INCREASE_RATE_SHEEP, 1);
 		} else {
 			this.setDest(this.getMateTarget().getPosition()); //2.i
-			moveIn(dt, Constants.FOOD_DROP_RATE_WOLF*Constants.FOOD_DROP_BOOST_FACTOR_WOLF, Constants.DESIRE_INCREASE_RATE_WOLF,Constants.BOOST_FACTOR_SHEEP);
+			moveIn(dt, Constants.FOOD_DROP_RATE_SHEEP*Constants.FOOD_DROP_BOOST_FACTOR_SHEEP, Constants.DESIRE_INCREASE_RATE_SHEEP,Constants.BOOST_FACTOR_SHEEP);
 			if(this.getMateTarget().getPosition().distanceTo(this.getPosition()) < Constants.COLLISION_RANGE) {
 				this.setDesire(0.0);
 				this.getMateTarget().setDesire(0.0);
@@ -105,7 +107,6 @@ public class Sheep extends Animal {
 				this.setMateTarget(null);
 			}
 		}
-			
 		if(this.dangerSource == null) {
 			List<Animal> animalsInRange = this.getRegionMngr().getAnimalsInRange(this, (a)-> a.getDiet() == Diet.CARNIVORE);
 			this.dangerSource = this.dangerStrategy.select(this, animalsInRange);
@@ -113,7 +114,6 @@ public class Sheep extends Animal {
 		if(this.dangerSource != null) this.setState(State.DANGER);
 		else if (this.getDesire() < Constants.DESIRE_THRESHOLD_SHEEP) this.setState(State.NORMAL);
 	}
-	
 
 	@Override
 	protected void setNormalStateAction() {

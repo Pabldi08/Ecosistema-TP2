@@ -83,7 +83,7 @@ public abstract class Animal implements Entity, AnimalInfo{
 		while (y >= height) y = (y - height);  
 		while (y < 0) y = (y + height);
 	    this.pos = new Vector2D(x,y);
-	    return posIni != this.pos;
+	    return posIni.getX() != this.pos.getX() || posIni.getY() != this.pos.getY();
 	}
 	
 	Animal deliverBaby() {
