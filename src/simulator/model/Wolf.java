@@ -60,7 +60,7 @@ public class Wolf extends Animal {
 	
 	private void applyHungerState(double dt) {
 		if(this.huntTarget == null || (this.huntTarget != null && this.huntTarget.getState() == State.DEAD) || !this.isInSightRange(huntTarget)) {
-			List<Animal> animalsInRange = this.getRegionMngr().getAnimalsInRange(this, a -> a.getDiet() == Diet.HERBIVORE);
+			List<Animal> animalsInRange = this.getRegionMngr().getAnimalsInRange(this, a -> a.getDiet() == Diet.HERBIVORE && a.getState() != State.DEAD);
 			this.huntTarget = this.huntingStrategy.select(this, animalsInRange);
 		}
 		if(this.huntTarget == null) {
@@ -88,9 +88,12 @@ public class Wolf extends Animal {
 			this.setMateTarget(null);
 		}
 		if(this.getMateTarget() == null) {
-			List<Animal> animalsInRange = this.getRegionMngr().getAnimalsInRange(this, a-> a.getGeneticCode() == Constants.WOLF_GENETIC_CODE);
+			List<Animal> animalsInRange = this.getRegionMngr().getAnimalsInRange(this, a-> a.getGeneticCode() == Constants.WOLF_GENETIC_CODE && a.getState() != State.DEAD);
 			this.setMateTarget(this.getMateStrategy().select(this, animalsInRange));
 			if(this.getMateTarget() == null) {
+				if(this.getDestination().distanceTo(this.getPosition())< Constants.COLLISION_RANGE) {
+					setDest(Animal.createRandomPosition(this.getRegionMngr().getWidth() - 1, this.getRegionMngr().getHeight() - 1));
+				}
 				moveIn(dt, Constants.FOOD_DROP_RATE_WOLF, Constants.DESIRE_INCREASE_RATE_WOLF,1);
 			}
 		}else {

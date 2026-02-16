@@ -62,7 +62,7 @@ public abstract class Animal implements Entity, AnimalInfo{
 		this.mateStrategy = p2.mateStrategy;
 	}
 	
-	void init(AnimalMapView regMngr) { //TODO En metodos que no te pone visibilidad deducimos que hay que poner?
+	void init(AnimalMapView regMngr) { 
 		this.regionMngr = regMngr;
 		if(this.pos == null) {
 			this.pos = Animal.createRandomPosition(regionMngr.getWidth()-1, regionMngr.getHeight()-1);

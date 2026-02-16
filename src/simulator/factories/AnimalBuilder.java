@@ -18,10 +18,8 @@ public abstract class  AnimalBuilder extends Builder<Animal> {
 		this.bbf = bbf;
 	}
 	
-	//TODO es mejor preguntar con has o !isNull
 	protected SelectionStrategy getStrategy(JSONObject data, String key) {
-		return data.has(key)? bbf.createInstance(data.getJSONObject("mate_strategy")): new SelectFirst();
-		//return !data.isNull(key)? bbf.createInstance(data.getJSONObject("mate_strategy")):new SelectFirst();
+		return data.has(key) ? bbf.createInstance(data.getJSONObject(key)): new SelectFirst();
 	}
 	
 	protected Vector2D getPosition(JSONObject data) {

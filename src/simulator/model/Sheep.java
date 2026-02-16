@@ -53,7 +53,7 @@ public class Sheep extends Animal {
 		}
 		moveIn(dt, Constants.FOOD_DROP_RATE_SHEEP, Constants.DESIRE_INCREASE_RATE_SHEEP, 1);
 		if(this.dangerSource == null) {
-			List<Animal> animalsInRange = this.getRegionMngr().getAnimalsInRange(this, (a)-> a.getDiet() == Diet.CARNIVORE);
+			List<Animal> animalsInRange = this.getRegionMngr().getAnimalsInRange(this, (a)-> a.getDiet() == Diet.CARNIVORE && a.getState() != State.DEAD);
 			this.dangerSource = this.dangerStrategy.select(this, animalsInRange);
 		}
 		if(this.dangerSource != null){
@@ -76,7 +76,7 @@ public class Sheep extends Animal {
 			moveIn(dt, Constants.FOOD_DROP_RATE_SHEEP*Constants.FOOD_DROP_BOOST_FACTOR_SHEEP, Constants.DESIRE_INCREASE_RATE_SHEEP,Constants.BOOST_FACTOR_SHEEP);
 		}
 		if(this.dangerSource == null || !isInSightRange(this.dangerSource)) {
-			List<Animal> animalsInRange = this.getRegionMngr().getAnimalsInRange(this, (a)-> a.getDiet() == Diet.CARNIVORE);
+			List<Animal> animalsInRange = this.getRegionMngr().getAnimalsInRange(this, (a)-> a.getDiet() == Diet.CARNIVORE && a.getState() != State.DEAD);
 			this.dangerSource = this.dangerStrategy.select(this, animalsInRange);
 			if(this.dangerSource == null) {
 				if(this.getDesire() < Constants.DESIRE_THRESHOLD_SHEEP) this.setState(State.NORMAL);
@@ -84,20 +84,25 @@ public class Sheep extends Animal {
 			}
 		}
 	}
-	/* TODO: contradicción si "pero en el diagrama de flujo de MATE EN SHEEP independientemente del hito 1, si se cumple que "mateTarget es null?" y tras "buscar un animal para emparejarse",
-	  no se cumple ahora que"mateTarget es null?", llega al hito 3 sin haberse movido, y a partir de ahí ya no hay forma de que se mueva en ese flujo, no?
-	*/ 
+	
+
 	private void applyMateState(double dt) {
 		if(this.getMateTarget() != null && (this.getMateTarget().getState() == State.DEAD || !isInSightRange(this.getMateTarget())))  {
 			this.setMateTarget(null);
 		}
 		if(this.getMateTarget() == null){
-			List<Animal> animalsInRange = this.getRegionMngr().getAnimalsInRange(this, (a)-> a.getGeneticCode() == Constants.SHEEP_GENETIC_CODE);
+			List<Animal> animalsInRange = this.getRegionMngr().getAnimalsInRange(this, (a)-> a.getGeneticCode() == Constants.SHEEP_GENETIC_CODE && a.getState() != State.DEAD);
 			this.setMateTarget(this.getMateStrategy().select(this, animalsInRange));
-			if(this.getMateTarget() == null) moveIn(dt, Constants.FOOD_DROP_RATE_SHEEP, Constants.DESIRE_INCREASE_RATE_SHEEP, 1);
+			if(this.getMateTarget() == null) {
+				if(this.getDestination().distanceTo(this.getPosition())< Constants.COLLISION_RANGE) {
+					setDest(Animal.createRandomPosition(this.getRegionMngr().getWidth() - 1, this.getRegionMngr().getHeight() - 1));
+				}
+				moveIn(dt, Constants.FOOD_DROP_RATE_SHEEP, Constants.DESIRE_INCREASE_RATE_SHEEP, 1);
+			}
 		} else {
 			this.setDest(this.getMateTarget().getPosition()); //2.i
 			moveIn(dt, Constants.FOOD_DROP_RATE_SHEEP*Constants.FOOD_DROP_BOOST_FACTOR_SHEEP, Constants.DESIRE_INCREASE_RATE_SHEEP,Constants.BOOST_FACTOR_SHEEP);
+			//TODO: Tiene que generar un solo animal por pareja
 			if(this.getMateTarget().getPosition().distanceTo(this.getPosition()) < Constants.COLLISION_RANGE) {
 				this.setDesire(0.0);
 				this.getMateTarget().setDesire(0.0);
@@ -108,7 +113,7 @@ public class Sheep extends Animal {
 			}
 		}
 		if(this.dangerSource == null) {
-			List<Animal> animalsInRange = this.getRegionMngr().getAnimalsInRange(this, (a)-> a.getDiet() == Diet.CARNIVORE);
+			List<Animal> animalsInRange = this.getRegionMngr().getAnimalsInRange(this, (a)-> a.getDiet() == Diet.CARNIVORE && a.getState() != State.DEAD);
 			this.dangerSource = this.dangerStrategy.select(this, animalsInRange);
 		}
 		if(this.dangerSource != null) this.setState(State.DANGER);

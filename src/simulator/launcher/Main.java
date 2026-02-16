@@ -58,7 +58,6 @@ public class Main {
 	private final static Double DEFAULT_TIME = 10.0; // in seconds
 	private final static Double DEFAULT_DELTA_TIME = 0.03;
 	
-	// TODO: preguntar si se pueden hacer atributos privados
 	
 	private static Factory<Region> regionFactory;
 	private static Factory<Animal> animalFactory;

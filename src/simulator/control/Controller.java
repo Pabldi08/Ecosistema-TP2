@@ -26,8 +26,7 @@ public class Controller {
 	
 	public void loadData(JSONObject data) {
 		
-		if(data.has("regions")) { 								//TODO: que usamos el has o el isNull negado?
-																//cuando en el enunciado pone que una key es opcional a que se refiere????
+		if(data.has("regions")) { 								
 			JSONArray regions = data.getJSONArray("regions");
 			for (int i = 0; i < regions.length(); i++) {
 			    JSONObject region = regions.getJSONObject(i);
@@ -87,19 +86,6 @@ public class Controller {
 		obj.put("in", initState);
 		obj.put("out", finalState);
 		
-		//TODO: Como escribimos en out, asi se hacia en TP1 por lo menos??
-		/*try (OutputStreamWriter writer = new OutputStreamWriter(out)) {
-		    obj.write(writer); 
-		    writer.flush();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		try {
-			out.write(obj.toString().getBytes());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}*/
 		
 		PrintStream p = new PrintStream(out);
 		p.println(obj.toString(2));
