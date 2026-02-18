@@ -64,6 +64,9 @@ public class Wolf extends Animal {
 			this.huntTarget = this.huntingStrategy.select(this, animalsInRange);
 		}
 		if(this.huntTarget == null) {
+			if(this.getDestination().distanceTo(this.getPosition())< Constants.COLLISION_RANGE) {
+				setDest(Animal.createRandomPosition(this.getRegionMngr().getWidth() - 1, this.getRegionMngr().getHeight() - 1));
+			}
 			moveIn(dt, Constants.FOOD_DROP_RATE_WOLF, Constants.DESIRE_INCREASE_RATE_WOLF,1);
 		}else {
 			setDest(huntTarget.getPosition());
