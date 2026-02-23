@@ -13,10 +13,6 @@ public class DynamicSupplyRegionBuilder extends Builder<Region>{
 
 	@Override
 	protected Region createInstance(JSONObject data) {
-		if (data == null) {
-            throw new IllegalArgumentException("DynamicSupplyRegion: 'data' cannot be null");
-        }
-        
         if (data.length() >= 2) {
             throw new IllegalArgumentException(
                 "DynamicSupplyRegion: 'data' must have 2 keys, but was: " + data.toString()

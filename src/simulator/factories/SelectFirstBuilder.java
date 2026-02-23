@@ -1,6 +1,5 @@
 package simulator.factories;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import simulator.model.SelectFirst;
@@ -14,10 +13,6 @@ public class SelectFirstBuilder extends Builder<SelectionStrategy> {
 
     @Override
     protected SelectionStrategy createInstance(JSONObject data) {     	
-        if (data == null) {
-            throw new IllegalArgumentException("SelectFirstBuilder: 'data' cannot be null");
-        }
-        // debe ser vacío según el enunciado
         if (data.length() != 0) {
             throw new IllegalArgumentException(
                 "SelectFirstBuilder: 'data' must be empty {}, but was: " + data.toString()

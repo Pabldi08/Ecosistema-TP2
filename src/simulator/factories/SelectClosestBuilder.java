@@ -12,11 +12,6 @@ public class SelectClosestBuilder extends Builder<SelectionStrategy> {
 
     @Override
     protected SelectionStrategy createInstance(JSONObject data) {
-    	
-        if (data == null) {
-            throw new IllegalArgumentException("SelectClosestBuilder: 'data' cannot be null");
-        }
-        // debe ser vacío según el enunciado
         if (data.length() != 0) {
             throw new IllegalArgumentException(
                 "SelectClosestBuilder: 'data' must be empty {}, but was: " + data.toString()

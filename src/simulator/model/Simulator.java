@@ -1,15 +1,12 @@
 package simulator.model;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Collections;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import simulator.factories.Factory;
-import simulator.misc.Vector2D;
 
 public class Simulator implements JSONable {
 	
