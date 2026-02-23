@@ -27,7 +27,6 @@ public class Controller {
 			JSONArray regions = data.getJSONArray("regions");
 			for (int i = 0; i < regions.length(); i++) {
 			    JSONObject region = regions.getJSONObject(i);
-			    sim.setRegion(i, i, region);
 			    JSONArray rows = region.getJSONArray("row");
 			    JSONArray cols = region.getJSONArray("col");
 			    int rf = rows.getInt(0);

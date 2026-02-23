@@ -102,7 +102,6 @@ public class Sheep extends Animal {
 		} else {
 			this.setDest(this.getMateTarget().getPosition()); //2.i
 			moveIn(dt, Constants.FOOD_DROP_RATE_SHEEP*Constants.FOOD_DROP_BOOST_FACTOR_SHEEP, Constants.DESIRE_INCREASE_RATE_SHEEP,Constants.BOOST_FACTOR_SHEEP);
-			//TODO: Tiene que generar un solo animal por pareja
 			if(this.getMateTarget().getPosition().distanceTo(this.getPosition()) < Constants.COLLISION_RANGE) {
 				this.setDesire(0.0);
 				this.getMateTarget().setDesire(0.0);
