@@ -39,13 +39,6 @@ public class BuilderBasedFactory<T> implements Factory<T> {
             T a = b.createInstance(info.has("data") ? info.getJSONObject("data") : new JSONObject());
             if(a != null) return a;
         }
-		/*
-		for(Map.Entry<String, Builder<T>> b: this.builders.entrySet()) {
-			if(b.getKey().equals(info.getString("type"))){
-				T a = b.getValue().createInstance(info.has("data") ? info.getJSONObject("data") : new JSONObject());
-				if(a != null) return a;
-			}
-		}*/
 		throw new IllegalArgumentException("Unrecognized ‘info’:" + info.toString());
 	}
 
