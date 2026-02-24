@@ -34,13 +34,18 @@ public class BuilderBasedFactory<T> implements Factory<T> {
 		if (info == null) {  
 			throw new IllegalArgumentException("’info’ cannot be null");  
 		}
-		
+		Builder<T> b = builders.get(info.getString("type"));
+        if(b!= null) {
+            T a = b.createInstance(info.has("data") ? info.getJSONObject("data") : new JSONObject());
+            if(a != null) return a;
+        }
+		/*
 		for(Map.Entry<String, Builder<T>> b: this.builders.entrySet()) {
 			if(b.getKey().equals(info.getString("type"))){
 				T a = b.getValue().createInstance(info.has("data") ? info.getJSONObject("data") : new JSONObject());
 				if(a != null) return a;
 			}
-		}
+		}*/
 		throw new IllegalArgumentException("Unrecognized ‘info’:" + info.toString());
 	}
 
