@@ -20,10 +20,12 @@ public class DynamicSupplyRegion extends Region{
 		}
 	}
 	
+	@Override
 	public double getFood(AnimalInfo a, double dt) {
 		if(a.getDiet() == Diet.CARNIVORE) {
 			return 0.0;
 		}else {
+			//TODO lo mismo que en default region
 			int n = 0;
 			for(Animal an: this.animalList) {
 				if(an.getDiet() == Diet.HERBIVORE) n++;
