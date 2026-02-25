@@ -27,7 +27,7 @@ public abstract class Region implements Entity, FoodSupplier, RegionInfo {
 	}
 	
 	final void setAnimals(List<Animal> animalList){
-		this.animalList = animalList;
+	    this.animalList = new ArrayList<>(animalList);
 	}
 	
 	protected int countHerbivores() {
@@ -41,7 +41,7 @@ public abstract class Region implements Entity, FoodSupplier, RegionInfo {
 		for(Animal a : this.animalList) {
 			arr.put(a.asJSON());
 		}
-		obj.put("animal", arr);
+		obj.put("animals", arr);
 		return obj;
 	}
 }

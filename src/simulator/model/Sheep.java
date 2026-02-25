@@ -91,7 +91,7 @@ public class Sheep extends Animal {
 			this.setMateTarget(null);
 		}
 		if(this.getMateTarget() == null){
-			List<Animal> animalsInRange = this.getRegionMngr().getAnimalsInRange(this, (a)-> a.getGeneticCode() == Constants.SHEEP_GENETIC_CODE && a.getState() != State.DEAD);
+			List<Animal> animalsInRange = this.getRegionMngr().getAnimalsInRange(this, (a)-> a.getGeneticCode().equals(Constants.SHEEP_GENETIC_CODE) && a.getState() != State.DEAD);
 			this.setMateTarget(this.getMateStrategy().select(this, animalsInRange));
 			if(this.getMateTarget() == null) {
 				if(this.getDestination().distanceTo(this.getPosition())< Constants.COLLISION_RANGE) {

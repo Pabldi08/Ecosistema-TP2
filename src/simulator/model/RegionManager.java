@@ -126,8 +126,8 @@ public class RegionManager implements AnimalMapView {
 	}
 	
 	private Region getRegion (Animal a) {
-		int x = (int) a.getPosition().getX()/this.regionWidth;
-		int y = (int) a.getPosition().getY()/this.regionHeight;
+		int x = Math.min(cols - 1, (int)(a.getPosition().getX() / regionWidth));
+		int y = Math.min(rows - 1, (int)(a.getPosition().getY() / regionHeight));
 		return this.regions[y][x];
 	}
 	

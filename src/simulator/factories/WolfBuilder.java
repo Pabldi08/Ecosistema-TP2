@@ -22,9 +22,9 @@ public class WolfBuilder extends AnimalBuilder {
             );
         } else {
         	SelectionStrategy mateStrategy = this.getStrategy(data, "mate_strategy");
-    		SelectionStrategy dangerStrategy = this.getStrategy(data, "danger_strategy");
+    		SelectionStrategy huntStrategy = this.getStrategy(data, "hunt_strategy");
     		Vector2D position = this.getPosition(data);
-            return new Wolf(mateStrategy, dangerStrategy, position);
+            return new Wolf(mateStrategy, huntStrategy, position);
         }
 	}
 }

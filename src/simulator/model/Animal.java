@@ -25,7 +25,7 @@ public abstract class Animal implements Entity, AnimalInfo{
 	protected Animal(String geneticCode, Diet diet, double sightRange,
 		double initSpeed, SelectionStrategy mateStrategy, Vector2D pos) {
 		
-		if(geneticCode.isBlank() || sightRange < 0 || initSpeed < 0 || mateStrategy.equals(null)) {
+		if(geneticCode == null || geneticCode.isBlank() || sightRange < 0 || initSpeed < 0 || mateStrategy == null) {
 			throw new IllegalArgumentException();
 		}
 		this.pos = pos;

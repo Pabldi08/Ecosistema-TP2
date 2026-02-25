@@ -91,7 +91,7 @@ public class Wolf extends Animal {
 			this.setMateTarget(null);
 		}
 		if(this.getMateTarget() == null) {
-			List<Animal> animalsInRange = this.getRegionMngr().getAnimalsInRange(this, a-> a.getGeneticCode() == Constants.WOLF_GENETIC_CODE && a.getState() != State.DEAD);
+			List<Animal> animalsInRange = this.getRegionMngr().getAnimalsInRange(this, a-> a.getGeneticCode().equals(Constants.WOLF_GENETIC_CODE) && a.getState() != State.DEAD);
 			this.setMateTarget(this.getMateStrategy().select(this, animalsInRange));
 			if(this.getMateTarget() == null) {
 				if(this.getDestination().distanceTo(this.getPosition())< Constants.COLLISION_RANGE) {

@@ -44,6 +44,6 @@ public class Constants {
 	final static double FOOD_SHORTAGE_EXP_HERBS = 2.0;
 
 	
-	final static double INIT_FOOD = 100.0;
-	final static double FACTOR = 2.0;
+	public final static double INIT_FOOD = 100.0;
+	public final static double FACTOR = 2.0;
 }
