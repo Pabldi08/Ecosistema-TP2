@@ -6,11 +6,13 @@ public class SelectFirst implements SelectionStrategy {
 
 	@Override
 	public Animal select(Animal a, List<Animal> as) {
+		/*
 		Animal first = null;
 		if(as.size()>0) {
 			first = as.get(0);
-		}
-		return first;
+		}*/
+		
+		return as.stream().findFirst().orElse(null);
 	}
 	
 }

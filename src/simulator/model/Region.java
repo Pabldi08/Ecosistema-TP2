@@ -30,6 +30,10 @@ public abstract class Region implements Entity, FoodSupplier, RegionInfo {
 		this.animalList = animalList;
 	}
 	
+	protected int countHerbivores() {
+		return this.animalList.stream().filter(an -> an.getDiet() == Diet.HERBIVORE).toList().size();
+	}
+	
 	public JSONObject asJSON() {
 		JSONObject obj = new JSONObject();
 		JSONArray arr = new JSONArray();
