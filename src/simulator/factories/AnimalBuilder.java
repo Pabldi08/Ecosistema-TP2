@@ -34,5 +34,7 @@ public abstract class  AnimalBuilder extends Builder<Animal> {
 		}
 		return position;
 	}
-
+	
+	// TODO: hacer fillInData de cada animal (opcional)
+	
 }

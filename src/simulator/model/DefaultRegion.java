@@ -1,7 +1,15 @@
 package simulator.model;
 
+import java.util.List;
+
 public class DefaultRegion extends Region {
 	
+
+	@Override
+	public String toString() {
+		return "DefaultRegion: infinite food supply.";
+	}
+
 
 	public void update(double dt) {
 	}

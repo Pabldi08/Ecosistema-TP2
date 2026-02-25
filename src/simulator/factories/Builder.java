@@ -23,12 +23,11 @@ public abstract class Builder<T> {
 		info.put("desc", desc);  
 		JSONObject data = new JSONObject();  
 		fillInData(data);
-		info.put("data", data);  
+		info.put("data", data); 
 		return info;  
 	}
 
-	protected void fillInData(JSONObject o) {  
-	}
+	protected void fillInData(JSONObject o) {}
 
 	@Override  
 	public String toString() {  

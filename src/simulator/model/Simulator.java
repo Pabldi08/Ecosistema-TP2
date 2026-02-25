@@ -93,5 +93,11 @@ public class Simulator implements JSONable {
 		return obj;
 	}
 	
+	public void reset(int cols, int rows, int width, int height) {
+		this.simulatedAnimals = new ArrayList<>();
+		this.rgnMngr = new RegionManager(cols, rows, width, height);
+		this.time = 0.0;
+	}
+	
 	
 }

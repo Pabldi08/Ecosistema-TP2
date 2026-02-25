@@ -4,6 +4,11 @@ import simulator.misc.Utils;
 
 public class DynamicSupplyRegion extends Region{
 	
+	@Override
+	public String toString() {
+		return "DynamicSupplyRegion: dynamic food supply.";
+	}
+
 	private double food;
 	private double factor;
 
