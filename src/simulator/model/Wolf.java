@@ -58,7 +58,7 @@ public class Wolf extends Animal {
 	}
 	
 	
-	private void applyHungerState(double dt) {
+	private void applyHungerState(double dt) { // TODO: dividir en métodos privados
 		if(this.huntTarget == null || (this.huntTarget != null && this.huntTarget.getState() == State.DEAD) || !this.isInSightRange(huntTarget)) {
 			List<Animal> animalsInRange = this.getRegionMngr().getAnimalsInRange(this, a -> a.getDiet() == Diet.HERBIVORE && a.getState() != State.DEAD);
 			this.huntTarget = this.huntingStrategy.select(this, animalsInRange);

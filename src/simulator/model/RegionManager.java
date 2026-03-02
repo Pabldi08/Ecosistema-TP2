@@ -2,6 +2,7 @@ package simulator.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
@@ -88,6 +89,7 @@ public class RegionManager implements AnimalMapView {
 	public List<Animal> getAnimalsInRange(Animal e, Predicate<Animal> filter) {
 		List<Animal> animalsInRange = new ArrayList<>();
 		
+		// TODO: cambiar por variables separadas, porque no usamos el vector para nada que no se pueda hacer con enteros.
 		Vector2D leftSup = new Vector2D(e.getPosition().getX()-e.getSightRange(), e.getPosition().getY()-e.getSightRange());
 		Vector2D rightBot = new Vector2D(e.getPosition().getX()+e.getSightRange(), e.getPosition().getY()+e.getSightRange());
 		
@@ -107,6 +109,8 @@ public class RegionManager implements AnimalMapView {
 		}
 		return animalsInRange;
 	}
+	
+
 	
 	public JSONObject asJSON() {
 		JSONObject obj = new JSONObject();
@@ -154,6 +158,41 @@ public class RegionManager implements AnimalMapView {
 
 	public int getRegionHeight() {
 		return this.regionHeight;
+	}
+
+	//TODO: esto es real?
+	@Override
+	public Iterator<RegionData> iterator() {
+		return new Iterator<RegionData>(){
+			private int currentRow = 0;
+	        private int currentCol = 0;
+
+	        @Override
+	        public boolean hasNext() {
+	            return currentRow < rows;
+	        }
+
+	        @Override
+	        public RegionData next() {
+	            if (!hasNext()) {
+	                throw new java.util.NoSuchElementException();
+	            }
+
+	            RegionInfo regionInfo = (RegionInfo) regions[currentRow][currentCol];
+
+	            RegionData data = new RegionData(currentRow, currentCol, regionInfo);
+	            
+	            currentCol++;
+	            
+	            if (currentCol >= cols) {
+	                currentCol = 0;
+	                currentRow++;
+	            }
+
+	            return data;
+	        }
+			
+		};
 	}
 
 }

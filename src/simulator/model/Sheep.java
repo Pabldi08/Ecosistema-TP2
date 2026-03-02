@@ -86,7 +86,7 @@ public class Sheep extends Animal {
 	}
 	
 
-	private void applyMateState(double dt) {
+	private void applyMateState(double dt) { // TODO: dividir en métodos privados
 		if(this.getMateTarget() != null && (this.getMateTarget().getState() == State.DEAD || !isInSightRange(this.getMateTarget())))  {
 			this.setMateTarget(null);
 		}
