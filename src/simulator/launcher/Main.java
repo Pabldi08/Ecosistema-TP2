@@ -59,13 +59,13 @@ public class Main {
 	private final static Double DEFAULT_DELTA_TIME = 0.03;
 	
 	
-	private static Factory<Region> regionFactory;
-	private static Factory<Animal> animalFactory;
+	public static Factory<Region> regionFactory;
+	public static Factory<Animal> animalFactory;
 
 	// some attributes to stores values corresponding to command-line parameters
 	//
 	private static Double time = null;
-	private static Double deltaTime = null;
+	public static Double deltaTime = null;
 	private static String inFile = null;
 	private static String outFile = null;
 	private static boolean sv = false;

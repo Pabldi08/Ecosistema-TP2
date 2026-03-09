@@ -9,6 +9,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import simulator.model.AnimalInfo;
+import simulator.model.EcoSysObserver;
 import simulator.model.MapInfo;
 import simulator.model.Simulator;
 import simulator.view.SimpleObjectViewer;
@@ -23,25 +24,7 @@ public class Controller {
 	
 	public void loadData(JSONObject data) {
 		
-		if(data.has("regions")) { 								
-			JSONArray regions = data.getJSONArray("regions");
-			for (int i = 0; i < regions.length(); i++) {
-			    JSONObject region = regions.getJSONObject(i);
-			    JSONArray rows = region.getJSONArray("row");
-			    JSONArray cols = region.getJSONArray("col");
-			    int rf = rows.getInt(0);
-			    int rt = rows.getInt(1);
-			    int cf = cols.getInt(0);
-			    int ct = cols.getInt(1);
-			    JSONObject O = region.getJSONObject("spec");
-			    
-			    for(int R = rf; R <= rt; R++) {
-			    	for(int C = cf; C <= ct; C++) {
-			    		sim.setRegion(R,C,O);
-			    	}
-			    }
-			}
-		}
+		this.readRegions(data);
 		
 		JSONArray animals = data.getJSONArray("animals");
 		for (int i = 0; i < animals.length(); i++) {
@@ -87,5 +70,48 @@ public class Controller {
 		p.println(obj.toString(2));
 		
 		if (sv) view.close();
+	}
+	
+	private void readRegions(JSONObject data) {
+		if(data.has("regions")) { 								
+			JSONArray regions = data.getJSONArray("regions");
+			for (int i = 0; i < regions.length(); i++) {
+			    JSONObject region = regions.getJSONObject(i);
+			    JSONArray rows = region.getJSONArray("row");
+			    JSONArray cols = region.getJSONArray("col");
+			    int rf = rows.getInt(0);
+			    int rt = rows.getInt(1);
+			    int cf = cols.getInt(0);
+			    int ct = cols.getInt(1);
+			    JSONObject O = region.getJSONObject("spec");
+			    
+			    for(int R = rf; R <= rt; R++) {
+			    	for(int C = cf; C <= ct; C++) {
+			    		sim.setRegion(R,C,O);
+			    	}
+			    }
+			}
+		}
+	}
+	
+	public void reset(int cols, int rows, int width, int height) {
+		sim.reset(cols, rows, width, height);
+	}
+	
+	public void setRegions(JSONObject rs) {
+		readRegions(rs);
+		
+	}
+	
+	public void advance(double dt) {
+		sim.advance(dt);
+	}
+	
+	public void addObserver(EcoSysObserver o) {
+		sim.addObserver(o);
+	}
+	
+	public void removeObserver(EcoSysObserver o) {
+		sim.removeObserver(o);
 	}
 }
