@@ -254,4 +254,8 @@ public abstract class Animal implements Entity, AnimalInfo{
 	}
 
 	
+	public static enum State{
+		NORMAL, MATE, HUNGER, DANGER, DEAD;
+	}
+	
 }
