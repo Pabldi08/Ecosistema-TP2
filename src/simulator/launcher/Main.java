@@ -9,6 +9,8 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.SwingUtilities;
+
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.DefaultParser;
@@ -28,6 +30,7 @@ import simulator.model.Animal;
 import simulator.model.Region;
 import simulator.model.SelectionStrategy;
 import simulator.model.Simulator;
+import simulator.view.MainWindow;
 import simulator.control.Controller;
 import simulator.factories.*;
 
@@ -57,6 +60,12 @@ public class Main {
 	
 	private final static Double DEFAULT_TIME = 10.0; // in seconds
 	private final static Double DEFAULT_DELTA_TIME = 0.03;
+	private final static ExecMode DEFAULT_MODE = ExecMode.GUI;
+	
+	private final static int DEFAULT_HEIGHT = 600;
+	private final static int DEFAULT_WIDTH = 800;
+	private final static int DEFAULT_COLS = 20;
+	private final static int DEFAULT_ROWS = 15;
 	
 	
 	public static Factory<Region> regionFactory;
@@ -83,6 +92,7 @@ public class Main {
 		try {
 			CommandLine line = parser.parse(cmdLineOptions, args);
 			parseHelpOption(line, cmdLineOptions);
+			parseModeOption(line);
 			parseInFileOption(line);
 			parseTimeOption(line);
 			parseSV(line);
@@ -121,6 +131,9 @@ public class Main {
 
 		// input file
 		cmdLineOptions.addOption(Option.builder("i").longOpt("input").hasArg().desc("A configuration file.").build());
+		
+		// mode
+		cmdLineOptions.addOption(Option.builder("m").longOpt("mode").hasArg().desc("Execution Mode. Possible values: 'batch' (Batch mode), 'gui' (Graphical User Interface mode). Default value: 'gui'.").build());
 
 		// output file
 		cmdLineOptions.addOption(Option.builder("o").longOpt("output").hasArg().desc("Output file, where output is written.").build());
@@ -154,11 +167,26 @@ public class Main {
 
 	private static void parseTimeOption(CommandLine line) throws ParseException {
 		String t = line.getOptionValue("t", DEFAULT_TIME.toString());
+		if(mode == ExecMode.BATCH) {
+			try {
+				time = Double.parseDouble(t);
+				assert (time >= 0);
+			} catch (Exception e) {
+				throw new ParseException("Invalid value for time: " + t);
+			}
+		} 
+	}
+	
+	private static void parseModeOption(CommandLine line) throws ParseException {
+		String m = line.getOptionValue("m", DEFAULT_MODE.toString());
 		try {
-			time = Double.parseDouble(t);
-			assert (time >= 0);
+			if(m == ExecMode.BATCH.getTag()) {
+				mode = ExecMode.BATCH;
+			}else {
+				mode = ExecMode.GUI;
+			}
 		} catch (Exception e) {
-			throw new ParseException("Invalid value for time: " + t);
+			throw new ParseException("Invalid value for time: " + m);
 		}
 	}
 	
@@ -226,7 +254,22 @@ public class Main {
 	}
 
 	private static void startGUIMode() throws Exception {
-		throw new UnsupportedOperationException("GUI mode is not ready yet ...");
+		InputStream is = new FileInputStream(new File(inFile));
+	    JSONObject input = loadJSONFile(is);
+
+	    int width  = input.optInt("width", DEFAULT_WIDTH);
+	    int height = input.optInt("height", DEFAULT_HEIGHT);
+	    int rows   = input.optInt("rows", DEFAULT_ROWS);
+	    int cols   = input.optInt("cols", DEFAULT_COLS);
+
+	    Simulator sim = new Simulator(cols, rows, width, height, animalFactory, regionFactory);
+	    Controller controller = new Controller(sim);
+
+	    if (!input.isEmpty()) {
+	        controller.loadData(input);
+	    }
+
+	    SwingUtilities.invokeAndWait(() -> new MainWindow(controller));
 	}
 
 	private static void start(String[] args) throws Exception {
