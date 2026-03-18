@@ -55,13 +55,14 @@ class ChangeRegionsDialog extends JDialog implements EcoSysObserver {
 	    //      añadirlo al panel correspondiente diálogo (Ver el apartado Figuras)
 
 	    // this.regionsInfo se usará para establecer la información en la tabla  
-	    this.regionsInfo = Main.regionsFactory.getInfo();
+	    this.regionsInfo = Main.regionFactory.getInfo();
 
 	    // this.dataTableModel es un modelo de tabla que incluye todos los parámetros de  
 	    // la region
 	    this.dataTableModel = new DefaultTableModel() {  
 	      @Override  
-	      public boolean isCellEditable(int row, int column) {  
+	      public boolean isCellEditable(int row, int column) {
+			return false;  
 	        // TODO hacer editable solo la columna 1  
 	      }  
 	    };  

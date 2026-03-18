@@ -41,7 +41,8 @@ public class MainWindow extends JFrame {
 	    // TODO llama a ViewUtils.quit(MainWindow.this) en el método windowClosing
 	    //addWindowListener(...);
 	    
-	    setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);  
+	    setDefaultCloseOperation(EXIT_ON_CLOSE);
+	    //setDefaultCloseOperation(DO_NOTHING_ON_CLOSE); TODO: CAMBIAR PARA ENTREGA 
 	    pack();  
 	    setVisible(true);  
 	   }  
