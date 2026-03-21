@@ -134,6 +134,8 @@ public class RegionManager implements AnimalMapView {
 		int y = Math.min(rows - 1, (int)(a.getPosition().getY() / regionHeight));
 		return this.regions[y][x];
 	}
+
+	
 	
 	//GETTERS
 	public int getCols() {
@@ -158,6 +160,10 @@ public class RegionManager implements AnimalMapView {
 
 	public int getRegionHeight() {
 		return this.regionHeight;
+	}
+	
+	public RegionInfo getRegionInfo(int i, int j) {
+		return regions[i][j];
 	}
 
 	//TODO: esto es real?
