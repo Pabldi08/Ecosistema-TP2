@@ -3,6 +3,8 @@ package simulator.model;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import simulator.model.Animal.Diet;
+
 
 import org.json.JSONArray;
 import org.json.JSONObject;

@@ -2,6 +2,8 @@ package simulator.model;
 
 import java.util.List;
 
+import simulator.model.Animal.Diet;
+
 public class DefaultRegion extends Region {
 	
 

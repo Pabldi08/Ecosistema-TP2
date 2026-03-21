@@ -1,6 +1,8 @@
 package simulator.model;
 
 import simulator.misc.Utils;
+import simulator.model.Animal.Diet;
+
 
 public class DynamicSupplyRegion extends Region{
 	

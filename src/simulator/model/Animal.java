@@ -253,9 +253,14 @@ public abstract class Animal implements Entity, AnimalInfo{
 		this.dest = dest;
 	}
 
-	
-	public static enum State{
+	public enum State{
 		NORMAL, MATE, HUNGER, DANGER, DEAD;
 	}
+	
+	public enum Diet {
+		HERBIVORE, CARNIVORE;
+	}
+	
+	
 	
 }
