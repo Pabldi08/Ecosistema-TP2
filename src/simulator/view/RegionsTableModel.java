@@ -7,6 +7,8 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
 import simulator.control.Controller;
+import simulator.model.Animal.Diet;
+import simulator.model.Animal.State;
 import simulator.model.AnimalInfo;
 import simulator.model.EcoSysObserver;
 import simulator.model.MapInfo;
@@ -19,6 +21,8 @@ class RegionsTableModel extends AbstractTableModel implements EcoSysObserver {
 
 	RegionsTableModel(Controller ctrl) {
 		this.ctrl = ctrl;
+		this.ctrl.addObserver(this);
+		
 		// TODO inicializar estructuras de datos correspondientes
 		// TODO registrar this como observador
 	}
@@ -32,9 +36,22 @@ class RegionsTableModel extends AbstractTableModel implements EcoSysObserver {
 
 	@Override
 	public int getColumnCount() {
-		// TODO Auto-generated method stub
-		return 0;
+		return Diet.values().length + 3;
 	}
+	
+	@Override
+    public String getColumnName(int column) {
+		switch(column) {
+		case 0:
+			return "Row";
+		case 1:
+			return "Col";
+		case 2:
+			return "Desc.";
+		default:
+			return Diet.values()[column - 3].name();
+		}
+    }
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
