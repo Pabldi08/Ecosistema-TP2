@@ -100,6 +100,7 @@ class ControlPanel extends JPanel {
 				    runSim(n, dt);
 				} catch (Exception ex) {
 					ViewUtils.showErrorMsg(ControlPanel.this, "El valor de delta time no es un número válido");
+					buttonsState(true);
 				}
 				
 			}
