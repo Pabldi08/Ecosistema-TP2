@@ -14,59 +14,61 @@ import simulator.model.RegionInfo;
 
 class RegionsTableModel extends AbstractTableModel implements EcoSysObserver {
 
-	  // TODO definir atributos necesarios
+	// TODO definir atributos necesarios
+	private Controller ctrl;
 
-	RegionsTableModel(Controller ctrl) {  
-	    // TODO inicializar estructuras de datos correspondientes  
-	    // TODO registrar this como observador  
-	  }  
-	  // TODO el resto de métodos van aquí …  
+	RegionsTableModel(Controller ctrl) {
+		this.ctrl = ctrl;
+		// TODO inicializar estructuras de datos correspondientes
+		// TODO registrar this como observador
+	}
+	// TODO el resto de métodos van aquí …
 
-	  @Override
-	  public int getRowCount() {
+	@Override
+	public int getRowCount() {
 		// TODO Auto-generated method stub
 		return 0;
-	  }
+	}
 
-	  @Override
-	  public int getColumnCount() {
+	@Override
+	public int getColumnCount() {
 		// TODO Auto-generated method stub
 		return 0;
-	  }
+	}
 
-	  @Override
-	  public Object getValueAt(int rowIndex, int columnIndex) {
+	@Override
+	public Object getValueAt(int rowIndex, int columnIndex) {
 		// TODO Auto-generated method stub
 		return null;
-	  }
-
-	  @Override
-	  public void onRegister(double time, MapInfo map, List<AnimalInfo> animals) {
-		// TODO Auto-generated method stub
-		
-	  }
-
-	  @Override
-	  public void onReset(double time, MapInfo map, List<AnimalInfo> animals) {
-		// TODO Auto-generated method stub
-		
-	  }
-
-	  @Override
-	  public void onAnimalAdded(double time, MapInfo map, List<AnimalInfo> animals, AnimalInfo a) {
-		// TODO Auto-generated method stub
-		
-	  }
-
-	  @Override
-	  public void onRegionSet(int row, int col, MapInfo map, RegionInfo r) {
-		// TODO Auto-generated method stub
-		
-	  }
-
-	  @Override
-	  public void onAdvance(double time, MapInfo map, List<AnimalInfo> animals, double dt) {
-		// TODO Auto-generated method stub
-		
-	  }
 	}
+
+	@Override
+	public void onRegister(double time, MapInfo map, List<AnimalInfo> animals) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onReset(double time, MapInfo map, List<AnimalInfo> animals) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onAnimalAdded(double time, MapInfo map, List<AnimalInfo> animals, AnimalInfo a) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onRegionSet(int row, int col, MapInfo map, RegionInfo r) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void onAdvance(double time, MapInfo map, List<AnimalInfo> animals, double dt) {
+		// TODO Auto-generated method stub
+
+	}
+}
