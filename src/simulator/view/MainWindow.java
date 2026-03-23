@@ -14,7 +14,7 @@ public class MainWindow extends JFrame {
 	  private Controller ctrl;
 
 	  public MainWindow(Controller ctrl) {  
-	    super("[ECOSYSTEM SIMULATOR]");  
+	    super("[ECOSYSTEM SIMULATOR]");
 	    this.ctrl = ctrl;  
 	    initGUI();  
 	  }

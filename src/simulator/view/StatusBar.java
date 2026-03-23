@@ -24,8 +24,8 @@ class StatusBar extends JPanel implements EcoSysObserver {
 	// TODO Añadir los atributos necesarios.
 
 	StatusBar(Controller ctrl) {
-		initGUI();
 		this.ctrl = ctrl;
+		initGUI();
 		this.ctrl.addObserver(this);
 	}
 
@@ -53,22 +53,17 @@ class StatusBar extends JPanel implements EcoSysObserver {
 
 	@Override
 	public void onRegister(double time, MapInfo map, List<AnimalInfo> animals) {
-		this.time.setText(String.format("Time: %.3f", time));
-		this.animals.setText("Total Animlas: " + animals.size());
-		this.dimension.setText("Dimension: " + map.getWidth() + "x" + map.getHeight()
-		+ " " + map.getCols()+ "x" + map.getRows());
+		updateLabels(time, map, animals);
 	}
 
 	@Override
 	public void onReset(double time, MapInfo map, List<AnimalInfo> animals) {
-		this.time.setText(String.format("Time: %.3f", 0));
-		this.animals.setText("Total Animals: " + 0);
+		updateLabels(time, map, animals);
 	}
 
 	@Override
 	public void onAnimalAdded(double time, MapInfo map, List<AnimalInfo> animals, AnimalInfo a) {
-		// TODO Auto-generated method stub
-
+		updateLabels(time, map, animals);
 	}
 
 	@Override
@@ -79,13 +74,13 @@ class StatusBar extends JPanel implements EcoSysObserver {
 
 	@Override
 	public void onAdvance(double time, MapInfo map, List<AnimalInfo> animals, double dt) {
+		updateLabels(time, map, animals);
+	}
+	
+	private void updateLabels(double time, MapInfo map, List<AnimalInfo> animals) {
 		this.time.setText(String.format("Time: %.3f", time));
 		this.animals.setText("Total Animlas: " + animals.size());
 		this.dimension.setText("Dimension: " + map.getWidth() + "x" + map.getHeight()
 		+ " " + map.getCols()+ "x" + map.getRows());
-		// TODO Auto-generated method stub
-
 	}
-
-	// TODO el resto de métodos van aquí…
 }

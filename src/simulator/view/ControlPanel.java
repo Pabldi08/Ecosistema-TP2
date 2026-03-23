@@ -6,6 +6,9 @@ import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 
 import javax.swing.Box;
 import javax.swing.ImageIcon;
@@ -19,6 +22,9 @@ import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
+
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 import simulator.control.Controller;
 
@@ -62,9 +68,30 @@ class ControlPanel extends JPanel {
 		this.folderButton = new JButton();
 		this.folderButton.setToolTipText("Load an input file into the simulator");
 		this.folderButton.setIcon(new ImageIcon("resources/icons/open.png"));
-		this.folderButton.addActionListener((e) -> this.fc.showOpenDialog(ViewUtils.getWindow(this)));
-		this.ctrl.reset(maxSteps, stepAdvance, minSteps, maxSteps);
-		this.fc.getSelectedFile();
+		
+		this.folderButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				fc.showOpenDialog(ViewUtils.getWindow(ControlPanel.this));
+				File file = fc.getSelectedFile();
+				InputStream is;
+				try {
+					is = new FileInputStream(file);
+					JSONObject input = loadJSONFile(is);
+					int width  = input.getInt("width");
+				    int height = input.getInt("height");
+				    int rows   = input.getInt("rows");
+				    int cols   = input.getInt("cols");
+					ControlPanel.this.ctrl.reset(cols, rows, width, height);
+					ControlPanel.this.ctrl.loadData(input);
+					
+				} catch (Exception e1) {
+					ViewUtils.showErrorMsg(ControlPanel.this, "Error en el archivo seleccionado");
+				}
+			}
+		});
+		
 		this.toolaBar.add(folderButton);
 
 		this.toolaBar.addSeparator();
@@ -121,12 +148,6 @@ class ControlPanel extends JPanel {
 		this.stepsCounter = new JSpinner();
 		this.stepsCounter.setModel(new SpinnerNumberModel(maxSteps, minSteps, maxSteps, stepAdvance));
 		this.stepsCounter.setToolTipText("Simulation steps to run: " + minSteps + "-" + maxSteps);
-		// TODO: tiene que ser editable por el usuario o solo con las flechas?
-		/*
-		 * JSpinner.NumberEditor editor = new JSpinner.NumberEditor(this.stepsCounter);
-		 * this.stepsCounter.setEditor(editor);
-		 * editor.getTextField().setEditable(false);
-		 */
 		this.toolaBar.add(stepsCounter);
 
 		// Delta-Time label and textField
@@ -136,11 +157,6 @@ class ControlPanel extends JPanel {
 		this.deltaTimeInput.setText("0.03");
 		this.toolaBar.add(deltaTimeInput);
 
-		// TODO crear los diferentes botones/atributos y añadirlos a la toolBar.
-		// Todos ellos han de tener su correspondiente tooltip. Puedes utilizar
-		// this.toolaBar.addSeparator() para añadir la línea de separación vertical
-		// entre las componentes que lo necesiten.
-
 		// Quit Button
 		this.toolaBar.add(Box.createGlue()); // this aligns the button to the right
 		this.toolaBar.addSeparator();
@@ -149,12 +165,6 @@ class ControlPanel extends JPanel {
 		this.quitButton.setIcon(new ImageIcon("resources/icons/exit.png"));
 		this.quitButton.addActionListener((e) -> ViewUtils.quit(this));
 		this.toolaBar.add(quitButton);
-
-		// TODO Inicializar this.fc con una instancia de JFileChooser. Para que siempre
-		// abre en la carpeta de ejemplos puedes usar:
-		//
-		// this.fc.setCurrentDirectory(new File(System.getProperty("user.dir") +
-		// "/resources/examples"));
 
 		// TODO Inicializar this.changeRegionsDialog con instancias del diálogo de
 		// cambio
@@ -187,6 +197,10 @@ class ControlPanel extends JPanel {
 		stepsCounter.setEnabled(state);
 		deltaTimeInput.setEnabled(state);
 		playButton.setEnabled(state);
+	}
+	
+	private JSONObject loadJSONFile(InputStream in) {
+		return new JSONObject(new JSONTokener(in));
 	}
 
 }

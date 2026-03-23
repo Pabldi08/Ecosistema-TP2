@@ -235,43 +235,40 @@ public class Main {
 	private static JSONObject loadJSONFile(InputStream in) {
 		return new JSONObject(new JSONTokener(in));
 	}
-
+	
+	private static Controller init(JSONObject input) {
+		int width  = input.optInt("width", DEFAULT_WIDTH);
+	    int height = input.optInt("height",DEFAULT_HEIGHT );
+	    int rows   = input.optInt("rows", DEFAULT_ROWS);
+	    int cols   = input.optInt("cols", DEFAULT_COLS);
+	    Simulator sim = new Simulator(cols, rows, width, height, animalFactory, regionFactory);
+	    Controller controller = new Controller(sim);
+	    if (!input.isEmpty()) {
+	        controller.loadData(input);
+	    }
+	    return controller;
+	}
 
 	private static void startBatchMode() throws Exception {
 		InputStream is = new FileInputStream(new File(inFile));
 		JSONObject input = loadJSONFile(is);
 		try (OutputStream os = new FileOutputStream(outFile)) {
-			int width = input.getInt("width");
-			int height = input.getInt("height");
-			int rows = input.getInt("rows");
-			int cols = input.getInt("cols");
-			Simulator sim = new Simulator(cols, rows, width, height, animalFactory, regionFactory);
-			Controller controller = new Controller(sim);
-			controller.loadData(input);
+			Controller controller = init(input);
 			controller.run(time, deltaTime, sv, os);
 			os.close();
 		} catch (IOException e) {
 			System.out.println(e.getMessage());
 		}
 	}
-
+	
 	private static void startGUIMode() throws Exception {
-		InputStream is = new FileInputStream(new File(inFile));
-	    JSONObject input = loadJSONFile(is);
-
-	    int width  = input.optInt("width", DEFAULT_WIDTH);
-	    int height = input.optInt("height", DEFAULT_HEIGHT);
-	    int rows   = input.optInt("rows", DEFAULT_ROWS);
-	    int cols   = input.optInt("cols", DEFAULT_COLS);
-
-	    Simulator sim = new Simulator(cols, rows, width, height, animalFactory, regionFactory);
-	    Controller controller = new Controller(sim);
-
-	    if (!input.isEmpty()) {
-	        controller.loadData(input);
-	    }
-
-	    SwingUtilities.invokeAndWait(() -> new MainWindow(controller));
+		JSONObject input = new JSONObject();
+		if(inFile != null) {
+			InputStream is = new FileInputStream(new File(inFile));
+			input = loadJSONFile(is);
+		}
+		Controller controller = init(input);
+		SwingUtilities.invokeAndWait(() -> new MainWindow(controller));
 	}
 
 	private static void start(String[] args) throws Exception {
