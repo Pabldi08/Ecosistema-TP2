@@ -26,7 +26,5 @@ public class InfoTable extends JPanel {
 		  JTable table = new JTable(this.tableModel);
 		  JScrollPane scroll = new JScrollPane(table);
 	      this.add(scroll, BorderLayout.CENTER);
-	    // TODO añadir un JTable (con barra de desplazamiento vertical) que use  
-	    //      this.tableModel
 	  }  
 	}

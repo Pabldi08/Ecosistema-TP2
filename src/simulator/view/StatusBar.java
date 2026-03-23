@@ -21,7 +21,6 @@ class StatusBar extends JPanel implements EcoSysObserver {
 	private JLabel time;
 	private JLabel animals;
 	private JLabel dimension;
-	// TODO Añadir los atributos necesarios.
 
 	StatusBar(Controller ctrl) {
 		this.ctrl = ctrl;
@@ -32,6 +31,7 @@ class StatusBar extends JPanel implements EcoSysObserver {
 	private void initGUI() {
 		this.setLayout(new FlowLayout(FlowLayout.LEFT));
 		this.setBorder(BorderFactory.createBevelBorder(1));
+		
 		// Time
 		this.time = new JLabel("Time: ");
 		this.time.setPreferredSize(new Dimension(80, 20));
@@ -39,6 +39,7 @@ class StatusBar extends JPanel implements EcoSysObserver {
 		JSeparator s = new JSeparator(JSeparator.VERTICAL);
 		s.setPreferredSize(new Dimension(10, 20));
 		this.add(s);
+		
 		// Animals
 		this.animals = new JLabel("Total Animals: ");
 		this.animals.setPreferredSize(new Dimension(130, 20));
@@ -46,6 +47,7 @@ class StatusBar extends JPanel implements EcoSysObserver {
 		s = new JSeparator(JSeparator.VERTICAL);
 		s.setPreferredSize(new Dimension(10, 20));
 		this.add(s);
+		
 		//Dimension
 		this.dimension = new JLabel("Dimension: ");
 		this.add(dimension);
