@@ -63,6 +63,8 @@ class ControlPanel extends JPanel {
 		this.folderButton.setToolTipText("Load an input file into the simulator");
 		this.folderButton.setIcon(new ImageIcon("resources/icons/open.png"));
 		this.folderButton.addActionListener((e) -> this.fc.showOpenDialog(ViewUtils.getWindow(this)));
+		this.ctrl.reset(maxSteps, stepAdvance, minSteps, maxSteps);
+		this.fc.getSelectedFile();
 		this.toolaBar.add(folderButton);
 
 		this.toolaBar.addSeparator();
@@ -99,7 +101,7 @@ class ControlPanel extends JPanel {
 				    n = ((Number) stepsCounter.getValue()).intValue();
 				    runSim(n, dt);
 				} catch (Exception ex) {
-					ViewUtils.showErrorMsg(ControlPanel.this, "El valor de delta time no es un número válido");
+					ViewUtils.showErrorMsg(ControlPanel.this, "El valor de delta time no es un numero valido");
 					buttonsState(true);
 				}
 				
@@ -186,5 +188,5 @@ class ControlPanel extends JPanel {
 		deltaTimeInput.setEnabled(state);
 		playButton.setEnabled(state);
 	}
-	// TODO el resto de mÃ©todos van aquÃ­â€¦
+
 }

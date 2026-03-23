@@ -78,7 +78,7 @@ public class Main {
 	private static String inFile = null;
 	private static String outFile = null;
 	private static boolean sv = false;
-	private static ExecMode mode = ExecMode.BATCH;
+	private static ExecMode mode = null;
 
 	private static void parseArgs(String[] args) {
 
@@ -149,12 +149,25 @@ public class Main {
 
 		return cmdLineOptions;
 	}
-
+	
 	private static void parseHelpOption(CommandLine line, Options cmdLineOptions) {
 		if (line.hasOption("h")) {
 			HelpFormatter formatter = new HelpFormatter();
 			formatter.printHelp(Main.class.getCanonicalName(), cmdLineOptions, true);
 			System.exit(0);
+		}
+	}
+	
+	private static void parseModeOption(CommandLine line) throws ParseException {
+		String m = line.getOptionValue("m", DEFAULT_MODE.toString());
+		try {
+			if(m.equals(ExecMode.BATCH.getTag())) {
+				mode = ExecMode.BATCH;
+			}else {
+				mode = ExecMode.GUI;
+			}
+		} catch (Exception e) {
+			throw new ParseException("Invalid value for mode: " + m);
 		}
 	}
 
@@ -166,8 +179,8 @@ public class Main {
 	}
 
 	private static void parseTimeOption(CommandLine line) throws ParseException {
-		String t = line.getOptionValue("t", DEFAULT_TIME.toString());
 		if(mode == ExecMode.BATCH) {
+			String t = line.getOptionValue("t", DEFAULT_TIME.toString());
 			try {
 				time = Double.parseDouble(t);
 				assert (time >= 0);
@@ -175,19 +188,6 @@ public class Main {
 				throw new ParseException("Invalid value for time: " + t);
 			}
 		} 
-	}
-	
-	private static void parseModeOption(CommandLine line) throws ParseException {
-		String m = line.getOptionValue("m", DEFAULT_MODE.toString());
-		try {
-			if(m == ExecMode.BATCH.getTag()) {
-				mode = ExecMode.BATCH;
-			}else {
-				mode = ExecMode.GUI;
-			}
-		} catch (Exception e) {
-			throw new ParseException("Invalid value for time: " + m);
-		}
 	}
 	
 	private static void parseSV(CommandLine line) {
@@ -200,14 +200,16 @@ public class Main {
 			deltaTime = Double.parseDouble(dt);
 			assert (deltaTime >= 0);
 		} catch (Exception e) {
-			throw new ParseException("Invalid value for time: " + dt);
+			throw new ParseException("Invalid value for delta-time: " + dt);
 		}
 	}
 	
 	private static void parseOutFileOption(CommandLine line) throws ParseException {
-		outFile = line.getOptionValue("o");
-		if (mode == ExecMode.BATCH && outFile == null) {
-			throw new ParseException("In batch mode an input configuration file is required");
+		if (mode == ExecMode.BATCH) {
+			outFile = line.getOptionValue("o");
+			if (mode == ExecMode.BATCH && outFile == null) {
+				throw new ParseException("In batch mode an output configuration file is required");
+			}
 		}
 	}
 

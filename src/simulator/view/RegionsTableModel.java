@@ -18,7 +18,6 @@ import simulator.model.RegionInfo;
 
 class RegionsTableModel extends AbstractTableModel implements EcoSysObserver {
 
-	// TODO definir atributos necesarios
 	private Controller ctrl;
 	private List<RegionData> regions;
 	
