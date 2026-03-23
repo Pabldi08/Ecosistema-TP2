@@ -62,7 +62,7 @@ class StatusBar extends JPanel implements EcoSysObserver {
 	@Override
 	public void onReset(double time, MapInfo map, List<AnimalInfo> animals) {
 		this.time.setText(String.format("Time: %.3f", 0));
-		this.animals.setText("Total Animlas: " + 0);
+		this.animals.setText("Total Animals: " + 0);
 	}
 
 	@Override

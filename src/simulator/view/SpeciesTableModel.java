@@ -18,21 +18,17 @@ class SpeciesTableModel extends AbstractTableModel implements EcoSysObserver {
 
     private Controller ctrl;
 
-    private List<String> geneticCodes;
     private Map<String, Map<State, Integer>> data;
 
     SpeciesTableModel(Controller ctrl) {
         this.ctrl = ctrl;
-        this.geneticCodes = new ArrayList<>();
         this.data = new HashMap<>();
         this.ctrl.addObserver(this);
     }
-
-    
     
     @Override
     public int getRowCount() {
-        return geneticCodes.size();
+        return data.keySet().size();
     }
 
     @Override
@@ -51,7 +47,7 @@ class SpeciesTableModel extends AbstractTableModel implements EcoSysObserver {
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        String gcode = geneticCodes.get(rowIndex);
+        String gcode = data.keySet().stream().toList().get(rowIndex);
         if (columnIndex == 0) {
             return gcode;
         } else {
@@ -61,25 +57,20 @@ class SpeciesTableModel extends AbstractTableModel implements EcoSysObserver {
     }
 
     private void updateTable(List<AnimalInfo> animals) {
-        geneticCodes.clear();
         data.clear();
 
         for (AnimalInfo a : animals) {
             String gcode = a.getGeneticCode();
             State state = a.getState();
-
             if (!data.containsKey(gcode)) {
                 Map<State, Integer> counters = new HashMap<>();
                 for (State s : State.values()) {
                     counters.put(s, 0);
                 }
                 data.put(gcode, counters);
-                geneticCodes.add(gcode);
             }
-
             data.get(gcode).put(state, data.get(gcode).get(state) + 1);
         }
-
         fireTableStructureChanged();
     }
 

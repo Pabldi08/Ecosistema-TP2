@@ -89,15 +89,18 @@ public class RegionManager implements AnimalMapView {
 	public List<Animal> getAnimalsInRange(Animal e, Predicate<Animal> filter) {
 		List<Animal> animalsInRange = new ArrayList<>();
 		
-		// TODO: cambiar por variables separadas, porque no usamos el vector para nada que no se pueda hacer con enteros.
-		Vector2D leftSup = new Vector2D(e.getPosition().getX()-e.getSightRange(), e.getPosition().getY()-e.getSightRange());
-		Vector2D rightBot = new Vector2D(e.getPosition().getX()+e.getSightRange(), e.getPosition().getY()+e.getSightRange());
+
 		
-		int regionIniX = Math.max(0, (int) (leftSup.getX()/this.regionWidth));
-		int regionFinX = Math.min(cols - 1, (int) (rightBot.getX()/this.regionWidth));
+		int leftSupX = (int)(e.getPosition().getX()-e.getSightRange());
+		int leftSupY = (int)(e.getPosition().getY()-e.getSightRange());
+		int rightBotX = (int)(e.getPosition().getX()+e.getSightRange());
+		int rightBotY = (int)(e.getPosition().getY()+e.getSightRange());
 		
-		int regionIniY = Math.max(0, (int) (leftSup.getY()/this.regionHeight));
-		int regionFinY = Math.min(rows - 1, (int) (rightBot.getY()/this.regionHeight));
+		int regionIniX = Math.max(0,leftSupX/this.regionWidth);
+		int regionFinX = Math.min(cols - 1, (int) (rightBotX/this.regionWidth));
+		
+		int regionIniY = Math.max(0, (int) (leftSupY/this.regionHeight));
+		int regionFinY = Math.min(rows - 1, (int) (rightBotY/this.regionHeight));
 		
 		for(int i = regionIniX; i <= regionFinX; i++) {
 			for(int j = regionIniY; j <= regionFinY;j++) {
@@ -166,7 +169,6 @@ public class RegionManager implements AnimalMapView {
 		return regions[i][j];
 	}
 
-	//TODO: esto es real?
 	@Override
 	public Iterator<RegionData> iterator() {
 		return new Iterator<RegionData>(){

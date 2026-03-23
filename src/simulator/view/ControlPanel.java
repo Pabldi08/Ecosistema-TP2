@@ -99,7 +99,7 @@ class ControlPanel extends JPanel {
 				    n = ((Number) stepsCounter.getValue()).intValue();
 				    runSim(n, dt);
 				} catch (Exception ex) {
-					ViewUtils.showErrorMsg(ControlPanel.this, "El valor de delta time no es un nÃºmero vÃ¡lido");
+					ViewUtils.showErrorMsg(ControlPanel.this, "El valor de delta time no es un número válido");
 					buttonsState(true);
 				}
 				

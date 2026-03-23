@@ -6,10 +6,7 @@ import simulator.model.Animal.Diet;
 
 public class DynamicSupplyRegion extends Region{
 	
-	@Override
-	public String toString() {
-		return "DynamicSupplyRegion: dynamic food supply.";
-	}
+	
 
 	private double food;
 	private double factor;
@@ -39,6 +36,10 @@ public class DynamicSupplyRegion extends Region{
 			return comida;
 		}
 	}
-
+	
+	@Override
+	public String toString() {
+		return "dynamic";
+	}
 
 }

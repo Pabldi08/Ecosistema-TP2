@@ -11,6 +11,4 @@ public interface MapInfo extends JSONable, Iterable<MapInfo.RegionData> {
 	public int getRegionWidth();  
 	public int getRegionHeight();
 	
-	//TODO esto se puede hacer?
-	public RegionInfo getRegionInfo(int i, int j);
 }
