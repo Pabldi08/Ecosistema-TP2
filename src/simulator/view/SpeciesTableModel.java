@@ -90,8 +90,7 @@ class SpeciesTableModel extends AbstractTableModel implements EcoSysObserver {
     }
 
     @Override
-    public void onRegionSet(int row, int col, MapInfo map, RegionInfo r) {
-    }
+    public void onRegionSet(int row, int col, MapInfo map, RegionInfo r) {}
 
     @Override
     public void onAdvance(double time, MapInfo map, List<AnimalInfo> animals, double dt) {

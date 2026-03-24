@@ -1,7 +1,7 @@
 {
   "width" : 200,
   "height" : 200,
-  "cols" : 20,
+  "cols" : 10,
   "rows" : 15,
   "animals" : [ {
     "amount" : 1,
