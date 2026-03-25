@@ -55,7 +55,6 @@ class ChangeRegionsDialog extends JDialog implements EcoSysObserver {
 
 	private String[] headers = { "Key", "Value", "Description" };
 
-	// TODO en caso de ser necesario, añadir los atributos aquí…
 	ChangeRegionsDialog(Controller ctrl) {
 		super((Frame) null, true);
 		this.ctrl = ctrl;
@@ -80,8 +79,7 @@ class ChangeRegionsDialog extends JDialog implements EcoSysObserver {
 		
 		updateTable();
 
-		// TODO crear los botones OK y Cancel y añadirlos al diálogo.
-
+		// Panel botones
 		mainPanel.add(bottomPanel());
 
 		setPreferredSize(new Dimension(700, 400)); // puedes usar otro tamaño
@@ -175,6 +173,9 @@ class ChangeRegionsDialog extends JDialog implements EcoSysObserver {
 		JTable table = new JTable(dataTableModel);
 		centerPanel.add(new JScrollPane(table));
 		this.dataTableModel.setColumnIdentifiers(this.headers);
+		table.getColumnModel().getColumn(0).setPreferredWidth(150);
+		table.getColumnModel().getColumn(1).setPreferredWidth(125);
+		table.getColumnModel().getColumn(2).setPreferredWidth(408);
 		return centerPanel;
 	}
 

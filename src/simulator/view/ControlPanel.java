@@ -177,6 +177,7 @@ class ControlPanel extends JPanel {
 			try {
 				this.ctrl.advance(dt);
 				SwingUtilities.invokeLater(() -> runSim(n - 1, dt));
+				Thread.sleep(100);
 			} catch (Exception e) {
 				ViewUtils.showErrorMsg(ControlPanel.this, e.getMessage());
 				buttonsState(true);
@@ -186,6 +187,7 @@ class ControlPanel extends JPanel {
 			buttonsState(true);
 			this.stopped = true;
 		}
+		
 	}
 
 	private void buttonsState(boolean state) {
