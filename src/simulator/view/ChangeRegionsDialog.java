@@ -232,43 +232,49 @@ class ChangeRegionsDialog extends JDialog implements EcoSysObserver {
 	}
 	
 	private void okAction() {
-		status = 1;
-		JSONObject regions = new JSONObject();
-		JSONArray list = new JSONArray();
-		JSONObject info = new JSONObject();
-		JSONArray row = new JSONArray();
-		row.put(this.rowFrom.getSelectedItem());
-		row.put(this.rowTo.getSelectedItem());
-		JSONArray col = new JSONArray();
-		col.put(this.colFrom.getSelectedItem());
-		col.put(this.colTo.getSelectedItem());
-		info.put("col", col);
-		info.put("row", row);
-		list.put(info);
-		regions.put("regions", list);
-		
-		JSONObject spec = new JSONObject();
-		spec.put("type", this.regionSelector.getSelectedItem());
-		JSONObject data = new JSONObject();
-		
-		for(int i = 0; i < this.dataTableModel.getRowCount();i++) {
-			if(this.dataTableModel.getValueAt(i, 1) != null) {
-				try {
+		try {
+			status = 1;
+			JSONObject regions = new JSONObject();
+			JSONArray list = new JSONArray();
+			JSONObject info = new JSONObject();
+			JSONArray row = new JSONArray();
+			JSONArray col = new JSONArray();
+			if(Integer.parseInt((String)this.rowTo.getSelectedItem()) < Integer.parseInt((String)this.rowFrom.getSelectedItem())){
+				ViewUtils.showErrorMsg(ChangeRegionsDialog.this, "Check row values");
+			}else if(Integer.parseInt((String)this.colTo.getSelectedItem()) < Integer.parseInt((String)this.colFrom.getSelectedItem())){
+				ViewUtils.showErrorMsg(ChangeRegionsDialog.this, "Check col values");
+			}else {
+				row.put(this.rowFrom.getSelectedItem());
+				row.put(this.rowTo.getSelectedItem());
+				col.put(this.colFrom.getSelectedItem());
+				col.put(this.colTo.getSelectedItem());
+			}
+			
+			info.put("col", col);
+			info.put("row", row);
+			list.put(info);
+			regions.put("regions", list);
+			
+			JSONObject spec = new JSONObject();
+			spec.put("type", this.regionSelector.getSelectedItem());
+			JSONObject data = new JSONObject();
+			for(int i = 0; i < this.dataTableModel.getRowCount();i++) {
+				if(this.dataTableModel.getValueAt(i, 1) != null) {
 					String key = (String)this.dataTableModel.getValueAt(i, 0);
 					int value = Integer.parseInt((String) this.dataTableModel.getValueAt(i, 1));
 					data.put(key, value);
-				} catch (Exception ex) {
-					ViewUtils.showErrorMsg(ChangeRegionsDialog.this, "Invalid values.");
-					this.status = 0;
+					
 				}
 			}
-		}
-		
-		if(status == 1) {
-			spec.put("data", data);
-			info.put("spec", spec);
-			this.ctrl.setRegions(regions);
-			this.setVisible(false);
+			if(status == 1) {
+				spec.put("data", data);
+				info.put("spec", spec);
+				this.ctrl.setRegions(regions);
+				this.setVisible(false);
+			}
+		}catch(NumberFormatException ex){
+			this.status = 0;
+			ViewUtils.showErrorMsg(ChangeRegionsDialog.this, "Invalid values.");
 		}
 	}
 }
