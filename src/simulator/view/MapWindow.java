@@ -8,6 +8,7 @@ import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import simulator.control.Controller;
 import simulator.model.AnimalInfo;
@@ -34,50 +35,42 @@ class MapWindow extends JFrame implements EcoSysObserver {
 	    this.setContentPane(mainPanel);
 	    this.viewer = new MapViewer();
 	    mainPanel.add(viewer, BorderLayout.CENTER);
-	    // TODO en el método windowClosing, eliminar ‘MapWindow.this’ de los
-	    //      observadores
 	    addWindowListener(new WindowListener() {
 
 			@Override
 			public void windowOpened(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
+	
 			}
 
 			@Override
 			public void windowClosing(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
+				ctrl.removeObserver(MapWindow.this);
+				dispose();
 			}
 
 			@Override
 			public void windowClosed(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void windowIconified(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void windowDeiconified(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void windowActivated(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
+
 			}
 
 			@Override
 			public void windowDeactivated(WindowEvent e) {
-				// TODO Auto-generated method stub
-				
+
 			}  });
 
 	    pack();
@@ -91,32 +84,27 @@ class MapWindow extends JFrame implements EcoSysObserver {
 
 	  @Override
 	  public void onRegister(double time, MapInfo map, List<AnimalInfo> animals) {
-		// TODO Auto-generated method stub
-		
+		  SwingUtilities.invokeLater(() -> { this.viewer.reset(time, map, animals); pack(); });
 	  }
 
 	  @Override
 	  public void onReset(double time, MapInfo map, List<AnimalInfo> animals) {
-		// TODO Auto-generated method stub
-		
+		  SwingUtilities.invokeLater(() -> { this.viewer.reset(time, map, animals); pack(); });
 	  }
 
 	  @Override
 	  public void onAnimalAdded(double time, MapInfo map, List<AnimalInfo> animals, AnimalInfo a) {
-		// TODO Auto-generated method stub
-		
+
 	  }
 
 	  @Override
 	  public void onRegionSet(int row, int col, MapInfo map, RegionInfo r) {
-		// TODO Auto-generated method stub
-		
+
 	  }
 
 	  @Override
 	  public void onAdvance(double time, MapInfo map, List<AnimalInfo> animals, double dt) {
-		// TODO Auto-generated method stub
-		
+		  SwingUtilities.invokeLater(() -> { this.viewer.update(animals, time); });
 	  }  
-	  // TODO otros métodos van aquí….  
+ 
 	}

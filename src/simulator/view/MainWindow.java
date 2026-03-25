@@ -2,6 +2,8 @@ package simulator.view;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JFrame;
@@ -41,9 +43,40 @@ public class MainWindow extends JFrame {
 	    regionsTable.setPreferredSize(new Dimension(500, 250));
 	    contentPanel.add(regionsTable);
 
-	    // TODO llama a ViewUtils.quit(MainWindow.this) en el método windowClosing
-	    //addWindowListener(...);
-	    
+
+	    addWindowListener(new WindowListener() {
+
+			@Override
+			public void windowOpened(WindowEvent e) {
+			}
+
+			@Override
+			public void windowClosing(WindowEvent e) {
+				ViewUtils.quit(MainWindow.this);
+				
+			}
+
+			@Override
+			public void windowClosed(WindowEvent e) {
+			}
+
+			@Override
+			public void windowIconified(WindowEvent e) {
+			}
+
+			@Override
+			public void windowDeiconified(WindowEvent e) {
+			}
+
+			@Override
+			public void windowActivated(WindowEvent e) {
+			}
+
+			@Override
+			public void windowDeactivated(WindowEvent e) {
+			}
+	    	
+	    });
 	    setDefaultCloseOperation(EXIT_ON_CLOSE);
 	    //setDefaultCloseOperation(DO_NOTHING_ON_CLOSE); TODO: CAMBIAR PARA ENTREGA 
 	    pack();  

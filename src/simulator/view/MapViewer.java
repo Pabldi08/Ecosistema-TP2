@@ -1,6 +1,7 @@
 package simulator.view;
 
 import simulator.model.Animal;
+import simulator.model.Animal.State;
 import simulator.model.AnimalInfo;
 import simulator.model.MapInfo;
 
@@ -15,6 +16,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import javax.swing.JLabel;
 
 /*
  * An incomplete version of  the map viewer, to be completed by students.
@@ -111,13 +114,16 @@ public class MapViewer extends AbstractMapViewer {
 					repaint();
 					break;
 				case 's':
-					// TODO Cambiar currState al siguiente (de manera circular). Después de null
-					//      viene el primero de Animal.State.values() y después del último viene null.
-					//
-					//      Change currState to the next option (in a circular way). After null
-					//      comes the first element of Animal.State.values(), and after the last of 
-					//      these values comes null.
-					//
+					State[] s = Animal.State.values();
+					if(currState == null) {
+						currState = s[0];
+					}else {
+						int i = 0;
+						while(!s[i].name().equals(currState.name())) {
+							i++;
+						}
+						currState = (i == s.length -1) ?  null : s[i + 1];
+					}
 					repaint();
 				default:
 				}
@@ -178,35 +184,28 @@ public class MapViewer extends AbstractMapViewer {
 		//
 		if (objs != null)
 			drawObjects(gr, objs, time);
-
-		// TODO Mostrar el texto de ayuda si showHelp es true. El texto a mostrar es el
-		//      siguiente (en 2 líneas):
-		//
-		//      Show a 'help' text if  showHwlp is true. The text should be the following
-		//      in two separated lines:
-		//
-		// h: toggle help
-		// s: show animals of a specific state
-
+		
+		//Mostrar texto de ayuda
+		if(showHelp) {
+			gr.setColor(Color.RED);
+			gr.drawString("h: toggle help",15,20);
+			gr.drawString("s: show animals of a specific state", 15	,35 );
+			
+		}
 	}
 
 	private boolean visible(AnimalInfo a) {
-		// TODO Devolver true si el animal es visible, es decir si currState es null o
-		//      su estado es igual a currState.
-		//
-		//      return true of the animal is visible, i.e., currState is null or its
-		//      state is equal to currState.
-		//
-		return true;
+		return a.getState() == currState|| currState == null;
 	}
 
 	private void drawObjects(Graphics2D g, Collection<AnimalInfo> animals, Double time) {
-
-		// TODO Dibujar el grid de regiones.
-		//
-		//      Draw a grid of regions.
-		//
-		
+		g.setColor(Color.GRAY);
+		for(int i = 0; i < rows +1; i++) {
+			g.drawLine(0,(height/rows)*i,width,(height/rows)*i);
+		}
+		for(int i = 0; i < cols +1; i++) {
+			g.drawLine((width/cols)*i,0,(width/cols)*i,height);
+		}
 		
 		// Dibujar los animales.
 		//
@@ -226,47 +225,40 @@ public class MapViewer extends AbstractMapViewer {
 			// Information of the species of 'a'
 			//
 			SpeciesInfo speciesInfo = kindsInfo.get(a.getGeneticCode());
+			
+			if(speciesInfo == null) {
+				speciesInfo = new SpeciesInfo(ViewUtils.getColor(a.getGeneticCode()));
+				kindsInfo.put(a.getGeneticCode(), speciesInfo);
+			}
+			speciesInfo.count++;
+			
 
-			// TODO Si espInfo es null, añade una entrada correspondiente al mapa. Para el
-			//      color usa ViewUtils.getColor(a.getGeneticCode()).
-			//
-			//      If espInfo is null, add a corresponding entry to the map. For the color
-			//      use ViewUtils.getColor(a.getGeneticCode()).
 			
 			
-			// TODO Incrementar el contador de la especie (es decir el contador dentro de
-			//      speciesInfo).
-			//
-			//      Increment the counter of the species (i.e., the one inside speciesInfo).
-
-			// TODO Dibujar el animal en la posicion correspondiente, usando el color
-			//      speciesInfo.color. Su tamaño tiene que ser relativo a su edad, por ejemplo
-			// 	    edad/2+2. Se puede dibujar usando fillRoundRect, fillRect o fillOval.
-			//
-			//      Draw the animal at the corresponding position, using the color 
-			//      speciesInfo.color. Its size should be relative to the animal's age, e.g.,
-			//      age/2+2. For drawing you can use fillRoundRect, fillRect or fillOval.
+			g.setColor(speciesInfo.color);
+			g.fillRoundRect((int)a.getPosition().getX(),(int) a.getPosition().getY(), (int)Math.round(a.getAge())+2 , (int)Math.round(a.getAge())+2,5,5);
+			
 		}
 
-		// TODO Dibujar la etiqueta del estado visible, usando currState.toString(), si no 
-		//      es null.
-		//
-		//      Draw the tag of the visible state, using currState.toString(), if it is not null.
+
+		int debajo = 19;
+		int i= 1;
+		g.setColor(Color.BLUE);
+		if(currState != null) {
+			drawStringWithRect(g, 10, height - rHeight, "State: " + currState.toString());
+			debajo = 0;
+		}
+
+		g.setColor(Color.MAGENTA);
+		drawStringWithRect(g, 10, height - rHeight - 19*i + debajo, "Time: " + String.format("%.3f", time));
+		i++;
 		
-		
-		// TODO Dibujar la etiqueta del tiempo. Para escribir solo 3 decimales puede
-		//      usar String.format("%.3f", time).
-		//
-		//      Draw the time. To use only 3 decimals you can use String.format("%.3f", time).
-		
-		
-		// TODO Dibujar la información de todas la especies. Al final de la iteración
-		//      poner el contador de la especie correspondiente a 0 (para resetear el cuento)
-		//
-		//      Draw the information of each species. At the end of the iteration, reset the 
-		//      species count.
-		//
 		for (Entry<String, SpeciesInfo> e : kindsInfo.entrySet()) {
+			SpeciesInfo info = e.getValue();
+			g.setColor(info.color);
+			drawStringWithRect(g, 10, height - rHeight - 19*i + debajo, e.getKey() + ": " + info.count);
+			info.count = 0;
+			i++;
 		}
 	}
 
@@ -282,25 +274,25 @@ public class MapViewer extends AbstractMapViewer {
 
 	@Override
 	public void update(List<AnimalInfo> objs, Double time) {
-		// TODO Almacenar objs y time en los atributos correspondientes y llamar a
-		//      repaint() para redibujar el componente.
-		//
-		//      Store objs and time in the corresponding fields, and call repaint() to
-		//      redraw the component.
+		this.objs = objs;
+		this.time = time;
+		repaint();
 	}
 
 	@Override
 	public void reset(double time, MapInfo map, List<AnimalInfo> animals) {
-		// TODO Actualizar los atributos width, height, cols, rows, etc.
-		//
-		//      Update the fields width, height, cols, rows, etc.
-
 		// Esto cambia el tamaño del componente, y así cambia el tamaño de la ventana
 		// porque en MapWindow llamamos a pack() después de llamar a reset.
 		//
 		// This line changes the size of the component, and thus the size of the window
 		// because MapWindow calls pack() after calling reset().
 		//
+		this.width = map.getWidth();
+		this.height = map.getHeight();
+		this.cols = map.getCols();
+		this.rows = map.getRows();
+		rWidth = map.getRegionWidth();
+		rHeight = map.getRegionHeight();
 		setPreferredSize(new Dimension(map.getWidth(), map.getHeight()));
 
 		// Dibuja el estado.

@@ -51,7 +51,7 @@ class ControlPanel extends JPanel {
 
 	ControlPanel(Controller ctrl) {
 		this.ctrl = ctrl;
-		this.changeRegionsDialog = new ChangeRegionsDialog(ctrl);
+		
 		initGUI();
 	}
 
@@ -166,9 +166,8 @@ class ControlPanel extends JPanel {
 		this.quitButton.addActionListener((e) -> ViewUtils.quit(this));
 		this.toolaBar.add(quitButton);
 
-		// TODO Inicializar this.changeRegionsDialog con instancias del diálogo de
-		// cambio
-		// de regiones
+		this.changeRegionsDialog = new ChangeRegionsDialog(ctrl);
+		
 
 	}
 
@@ -177,7 +176,7 @@ class ControlPanel extends JPanel {
 			try {
 				this.ctrl.advance(dt);
 				SwingUtilities.invokeLater(() -> runSim(n - 1, dt));
-				Thread.sleep(100);
+				Thread.sleep(25);
 			} catch (Exception e) {
 				ViewUtils.showErrorMsg(ControlPanel.this, e.getMessage());
 				buttonsState(true);
