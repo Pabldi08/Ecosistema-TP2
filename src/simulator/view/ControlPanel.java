@@ -86,7 +86,7 @@ class ControlPanel extends JPanel {
 					ControlPanel.this.ctrl.reset(cols, rows, width, height);
 					ControlPanel.this.ctrl.loadData(input);
 					
-				} catch (Exception e1) {
+				} catch (Exception e1) {	
 					ViewUtils.showErrorMsg(ControlPanel.this, "Error en el archivo seleccionado");
 				}
 			}

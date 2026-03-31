@@ -58,7 +58,7 @@ class SpeciesTableModel extends AbstractTableModel implements EcoSysObserver {
 
     private void updateTable(List<AnimalInfo> animals) {
         data.clear();
-
+        
         for (AnimalInfo a : animals) {
             String gcode = a.getGeneticCode();
             State state = a.getState();

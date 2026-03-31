@@ -248,12 +248,13 @@ class ChangeRegionsDialog extends JDialog implements EcoSysObserver {
 				row.put(this.rowTo.getSelectedItem());
 				col.put(this.colFrom.getSelectedItem());
 				col.put(this.colTo.getSelectedItem());
+				info.put("col", col);
+				info.put("row", row);
+				list.put(info);
+				regions.put("regions", list);
 			}
 			
-			info.put("col", col);
-			info.put("row", row);
-			list.put(info);
-			regions.put("regions", list);
+			
 			
 			JSONObject spec = new JSONObject();
 			spec.put("type", this.regionSelector.getSelectedItem());
