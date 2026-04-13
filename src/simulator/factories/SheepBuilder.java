@@ -20,7 +20,7 @@ public class SheepBuilder extends AnimalBuilder {
             throw new IllegalArgumentException(
                 "Sheep: 'data' must have 3 or less keys, but was: " + data.toString()
             );
-        } else { // TODO: subir más cosas a AnimalBuilder
+        } else {
     		SelectionStrategy mateStrategy = this.getStrategy(data, "mate_strategy");
     		SelectionStrategy dangerStrategy = this.getStrategy(data, "danger_strategy");
     		Vector2D position = this.getPosition(data);

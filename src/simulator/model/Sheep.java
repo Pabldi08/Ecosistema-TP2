@@ -86,30 +86,14 @@ public class Sheep extends Animal {
 	}
 	
 
-	private void applyMateState(double dt) { // TODO: dividir en métodos privados
+	private void applyMateState(double dt) { 
 		if(this.getMateTarget() != null && (this.getMateTarget().getState() == State.DEAD || !isInSightRange(this.getMateTarget())))  {
 			this.setMateTarget(null);
 		}
 		if(this.getMateTarget() == null){
-			List<Animal> animalsInRange = this.getRegionMngr().getAnimalsInRange(this, (a)-> a.getGeneticCode().equals(Constants.SHEEP_GENETIC_CODE) && a.getState() != State.DEAD);
-			this.setMateTarget(this.getMateStrategy().select(this, animalsInRange));
-			if(this.getMateTarget() == null) {
-				if(this.getDestination().distanceTo(this.getPosition())< Constants.COLLISION_RANGE) {
-					setDest(Animal.createRandomPosition(this.getRegionMngr().getWidth() - 1, this.getRegionMngr().getHeight() - 1));
-				}
-				moveIn(dt, Constants.FOOD_DROP_RATE_SHEEP, Constants.DESIRE_INCREASE_RATE_SHEEP, 1);
-			}
+			findMate(dt);
 		} else {
-			this.setDest(this.getMateTarget().getPosition()); //2.i
-			moveIn(dt, Constants.FOOD_DROP_RATE_SHEEP*Constants.FOOD_DROP_BOOST_FACTOR_SHEEP, Constants.DESIRE_INCREASE_RATE_SHEEP,Constants.BOOST_FACTOR_SHEEP);
-			if(this.getMateTarget().getPosition().distanceTo(this.getPosition()) < Constants.COLLISION_RANGE) {
-				this.setDesire(0.0);
-				this.getMateTarget().setDesire(0.0);
-				if(!this.isPregnant()) {
-					if(Utils.RAND.nextDouble() < Constants.PREGNANT_PROBABILITY_SHEEP) this.setBaby(new Sheep(this, this.getMateTarget()));
-				}
-				this.setMateTarget(null);
-			}
+			approachMate(dt);
 		}
 		if(this.dangerSource == null) {
 			List<Animal> animalsInRange = this.getRegionMngr().getAnimalsInRange(this, (a)-> a.getDiet() == Diet.CARNIVORE && a.getState() != State.DEAD);
@@ -117,6 +101,30 @@ public class Sheep extends Animal {
 		}
 		if(this.dangerSource != null) this.setState(State.DANGER);
 		else if (this.getDesire() < Constants.DESIRE_THRESHOLD_SHEEP) this.setState(State.NORMAL);
+	}
+	
+	private void findMate(double dt) {
+		List<Animal> animalsInRange = this.getRegionMngr().getAnimalsInRange(this, (a)-> a.getGeneticCode().equals(Constants.SHEEP_GENETIC_CODE) && a.getState() != State.DEAD);
+		this.setMateTarget(this.getMateStrategy().select(this, animalsInRange));
+		if(this.getMateTarget() == null) {
+			if(this.getDestination().distanceTo(this.getPosition())< Constants.COLLISION_RANGE) {
+				setDest(Animal.createRandomPosition(this.getRegionMngr().getWidth() - 1, this.getRegionMngr().getHeight() - 1));
+			}
+			moveIn(dt, Constants.FOOD_DROP_RATE_SHEEP, Constants.DESIRE_INCREASE_RATE_SHEEP, 1);
+		}
+	}
+	
+	private void approachMate(double dt) {
+		this.setDest(this.getMateTarget().getPosition()); //2.i
+		moveIn(dt, Constants.FOOD_DROP_RATE_SHEEP*Constants.FOOD_DROP_BOOST_FACTOR_SHEEP, Constants.DESIRE_INCREASE_RATE_SHEEP,Constants.BOOST_FACTOR_SHEEP);
+		if(this.getMateTarget().getPosition().distanceTo(this.getPosition()) < Constants.COLLISION_RANGE) {
+			this.setDesire(0.0);
+			this.getMateTarget().setDesire(0.0);
+			if(!this.isPregnant()) {
+				if(Utils.RAND.nextDouble() < Constants.PREGNANT_PROBABILITY_SHEEP) this.setBaby(new Sheep(this, this.getMateTarget()));
+			}
+			this.setMateTarget(null);
+		}
 	}
 
 	@Override

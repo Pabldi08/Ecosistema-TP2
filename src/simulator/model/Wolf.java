@@ -58,7 +58,7 @@ public class Wolf extends Animal {
 	}
 	
 	
-	private void applyHungerState(double dt) { // TODO: dividir en métodos privados
+	private void applyHungerState(double dt) {
 		if(this.huntTarget == null || (this.huntTarget != null && this.huntTarget.getState() == State.DEAD) || !this.isInSightRange(huntTarget)) {
 			List<Animal> animalsInRange = this.getRegionMngr().getAnimalsInRange(this, a -> a.getDiet() == Diet.HERBIVORE && a.getState() != State.DEAD);
 			this.huntTarget = this.huntingStrategy.select(this, animalsInRange);
@@ -69,13 +69,7 @@ public class Wolf extends Animal {
 			}
 			moveIn(dt, Constants.FOOD_DROP_RATE_WOLF, Constants.DESIRE_INCREASE_RATE_WOLF,1);
 		}else {
-			setDest(huntTarget.getPosition());
-			moveIn(dt, Constants.FOOD_DROP_RATE_WOLF*Constants.FOOD_DROP_BOOST_FACTOR_WOLF, Constants.DESIRE_INCREASE_RATE_WOLF,Constants.BOOST_FACTOR_WOLF);
-			if(this.getPosition().distanceTo(this.huntTarget.getPosition()) < Constants.COLLISION_RANGE) {
-				this.huntTarget.setState(State.DEAD);
-				this.huntTarget = null;
-				this.setEnergy(this.getEnergy() + Constants.FOOD_EAT_VALUE_WOLF);
-			}
+			hunt(dt);
 		}
 		if(this.getEnergy() > Constants.FOOD_THRESHOLD_WOLF) {
 			if(this.getDesire() < Constants.DESIRE_THRESHOLD_WOLF) {
@@ -85,38 +79,56 @@ public class Wolf extends Animal {
 			}
 		}
 	}
+	
+	private void hunt (double dt) {
+		setDest(huntTarget.getPosition());
+		moveIn(dt, Constants.FOOD_DROP_RATE_WOLF*Constants.FOOD_DROP_BOOST_FACTOR_WOLF, Constants.DESIRE_INCREASE_RATE_WOLF,Constants.BOOST_FACTOR_WOLF);
+		if(this.getPosition().distanceTo(this.huntTarget.getPosition()) < Constants.COLLISION_RANGE) {
+			this.huntTarget.setState(State.DEAD);
+			this.huntTarget = null;
+			this.setEnergy(this.getEnergy() + Constants.FOOD_EAT_VALUE_WOLF);
+		}
+	}
 
 	private void applyMateState(double dt) {
 		if(this.getMateTarget() != null && (this.getMateTarget().getState() == State.DEAD || !isInSightRange(this.getMateTarget())))  {
 			this.setMateTarget(null);
 		}
 		if(this.getMateTarget() == null) {
-			List<Animal> animalsInRange = this.getRegionMngr().getAnimalsInRange(this, a-> a.getGeneticCode().equals(Constants.WOLF_GENETIC_CODE) && a.getState() != State.DEAD);
-			this.setMateTarget(this.getMateStrategy().select(this, animalsInRange));
-			if(this.getMateTarget() == null) {
-				if(this.getDestination().distanceTo(this.getPosition())< Constants.COLLISION_RANGE) {
-					setDest(Animal.createRandomPosition(this.getRegionMngr().getWidth() - 1, this.getRegionMngr().getHeight() - 1));
-				}
-				moveIn(dt, Constants.FOOD_DROP_RATE_WOLF, Constants.DESIRE_INCREASE_RATE_WOLF,1);
-			}
-		}else {
-			setDest(this.getMateTarget().getPosition());
-			moveIn(dt, Constants.FOOD_DROP_RATE_WOLF*Constants.FOOD_DROP_BOOST_FACTOR_WOLF, Constants.DESIRE_INCREASE_RATE_WOLF,Constants.BOOST_FACTOR_WOLF);
-			if(this.getPosition().distanceTo(this.getMateTarget().getPosition()) < Constants.COLLISION_RANGE) {
-				this.setDesire(0.0);
-				this.getMateTarget().setDesire(0.0);
-				if(!this.isPregnant()) {
-					if(Utils.RAND.nextDouble() < Constants.PREGNANT_PROBABILITY_WOLF) {
-						this.setBaby(new Wolf(this, this.getMateTarget()));
-					}
-				}
-				this.setEnergy(this.getEnergy()-Constants.FOOD_DROP_DESIRE_WOLF);
-				this.setMateTarget(null);
-			}
+			findMate(dt);
+		} else {
+			approachMate(dt);
 		}
 		if(this.getEnergy()<Constants.FOOD_THRESHOLD_WOLF) this.setState(State.HUNGER);
 		else if(this.getDesire() < Constants.DESIRE_THRESHOLD_WOLF) this.setState(State.NORMAL);
 
+	}
+
+	private void findMate(double dt) {
+		List<Animal> animalsInRange = this.getRegionMngr().getAnimalsInRange(this, a-> a.getGeneticCode().equals(Constants.WOLF_GENETIC_CODE) && a.getState() != State.DEAD);
+		this.setMateTarget(this.getMateStrategy().select(this, animalsInRange));
+		if(this.getMateTarget() == null) {
+			if(this.getDestination().distanceTo(this.getPosition())< Constants.COLLISION_RANGE) {
+				setDest(Animal.createRandomPosition(this.getRegionMngr().getWidth() - 1, this.getRegionMngr().getHeight() - 1));
+			}
+			moveIn(dt, Constants.FOOD_DROP_RATE_WOLF, Constants.DESIRE_INCREASE_RATE_WOLF,1);
+		}
+	}
+	
+	private void approachMate(double dt) {
+		setDest(this.getMateTarget().getPosition());
+		moveIn(dt, Constants.FOOD_DROP_RATE_WOLF*Constants.FOOD_DROP_BOOST_FACTOR_WOLF, Constants.DESIRE_INCREASE_RATE_WOLF,Constants.BOOST_FACTOR_WOLF);
+		if(this.getPosition().distanceTo(this.getMateTarget().getPosition()) < Constants.COLLISION_RANGE) {
+			this.setDesire(0.0);
+			this.getMateTarget().setDesire(0.0);
+			if(!this.isPregnant()) {
+				if(Utils.RAND.nextDouble() < Constants.PREGNANT_PROBABILITY_WOLF) {
+					this.setBaby(new Wolf(this, this.getMateTarget()));
+				}
+			}
+			this.setEnergy(this.getEnergy()-Constants.FOOD_DROP_DESIRE_WOLF);
+			this.setMateTarget(null);
+		}
 	}
 	
 	@Override

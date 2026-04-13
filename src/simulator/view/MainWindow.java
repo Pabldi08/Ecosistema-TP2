@@ -77,8 +77,7 @@ public class MainWindow extends JFrame {
 			}
 	    	
 	    });
-	    setDefaultCloseOperation(EXIT_ON_CLOSE);
-	    //setDefaultCloseOperation(DO_NOTHING_ON_CLOSE); TODO: CAMBIAR PARA ENTREGA 
+	    setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 	    pack();  
 	    setVisible(true);  
 	   }  
