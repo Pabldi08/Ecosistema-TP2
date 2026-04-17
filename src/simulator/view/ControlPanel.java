@@ -27,6 +27,7 @@ import org.json.JSONObject;
 import org.json.JSONTokener;
 
 import simulator.control.Controller;
+import simulator.launcher.Main;
 
 class ControlPanel extends JPanel {
 
@@ -154,7 +155,7 @@ class ControlPanel extends JPanel {
 		this.toolaBar.add(new JLabel("Delta-Time: "));
 		this.deltaTimeInput = new JTextField(6);
 		this.deltaTimeInput.setToolTipText("Real time (seconds) corresponding to a step");
-		this.deltaTimeInput.setText("0.03");
+		this.deltaTimeInput.setText("" + Main.deltaTime);
 		this.toolaBar.add(deltaTimeInput);
 
 		// Quit Button

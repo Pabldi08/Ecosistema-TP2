@@ -144,9 +144,8 @@ class ChangeRegionsDialog extends JDialog implements EcoSysObserver {
 		}
 	}
 
-	private JPanel topPanel() {
-		JPanel topPanel = new JPanel();
-		topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
+	private JTextArea topPanel() {
+		//TODO Cambiar a JLabel
 		JTextArea help = new JTextArea(
 				"Select a region type, the rows/cols interval, and provide values for the parameters in the Value column (default values "
 						+ "are used for parameters with no value).");
@@ -155,8 +154,7 @@ class ChangeRegionsDialog extends JDialog implements EcoSysObserver {
 		help.setOpaque(false); // Para que no se vea el cuadro de texto
 		help.setFocusable(false);
 		help.setFont(UIManager.getFont("Label.font"));
-		topPanel.add(help);
-		return topPanel;
+		return help;
 	}
 	
 	private JPanel centerPanel() {
