@@ -144,17 +144,13 @@ class ChangeRegionsDialog extends JDialog implements EcoSysObserver {
 		}
 	}
 
-	private JTextArea topPanel() {
-		//TODO Cambiar a JLabel
-		JTextArea help = new JTextArea(
-				"Select a region type, the rows/cols interval, and provide values for the parameters in the Value column (default values "
-						+ "are used for parameters with no value).");
-		help.setLineWrap(true);
-		help.setWrapStyleWord(true); // Para que no corte las palabras por la mitad
-		help.setOpaque(false); // Para que no se vea el cuadro de texto
-		help.setFocusable(false);
-		help.setFont(UIManager.getFont("Label.font"));
-		return help;
+	private JPanel topPanel() {
+		JPanel panel = new JPanel(new BorderLayout());
+		JLabel help = new JLabel(
+				"<html>Select a region type, the rows/cols interval, and provide values for the parameters in the Value column (default values "
+						+ "are used for parameters with no value).</html>");		
+		panel.add(help, BorderLayout.CENTER);
+		return panel;
 	}
 	
 	private JPanel centerPanel() {
@@ -260,9 +256,8 @@ class ChangeRegionsDialog extends JDialog implements EcoSysObserver {
 			for(int i = 0; i < this.dataTableModel.getRowCount();i++) {
 				if(this.dataTableModel.getValueAt(i, 1) != null) {
 					String key = (String)this.dataTableModel.getValueAt(i, 0);
-					int value = Integer.parseInt((String) this.dataTableModel.getValueAt(i, 1));
+					Double value = Double.parseDouble((String) this.dataTableModel.getValueAt(i, 1));
 					data.put(key, value);
-					
 				}
 			}
 			if(status == 1) {

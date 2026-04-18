@@ -71,24 +71,23 @@ class ControlPanel extends JPanel {
 		this.folderButton.setIcon(new ImageIcon("resources/icons/open.png"));
 		
 		this.folderButton.addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				fc.showOpenDialog(ViewUtils.getWindow(ControlPanel.this));
-				File file = fc.getSelectedFile();
-				InputStream is;
-				try {
-					is = new FileInputStream(file);
-					JSONObject input = loadJSONFile(is);
-					int width  = input.getInt("width");
-				    int height = input.getInt("height");
-				    int rows   = input.getInt("rows");
-				    int cols   = input.getInt("cols");
-					ControlPanel.this.ctrl.reset(cols, rows, width, height);
-					ControlPanel.this.ctrl.loadData(input);
-					
-				} catch (Exception e1) {	
-					ViewUtils.showErrorMsg(ControlPanel.this, "Error en el archivo seleccionado");
+				int returnVal = fc.showOpenDialog(ViewUtils.getWindow(ControlPanel.this));
+				if (returnVal == JFileChooser.APPROVE_OPTION) {
+					File file = fc.getSelectedFile();
+					try {
+						InputStream is = new FileInputStream(file);
+						JSONObject input = loadJSONFile(is);
+						int width  = input.getInt("width");
+					    int height = input.getInt("height");
+					    int rows   = input.getInt("rows");
+					    int cols   = input.getInt("cols");
+						ControlPanel.this.ctrl.reset(cols, rows, width, height);
+						ControlPanel.this.ctrl.loadData(input);
+					} catch (Exception e1) {	
+						ViewUtils.showErrorMsg(ControlPanel.this, "Error en el archivo seleccionado");
+					}
 				}
 			}
 		});

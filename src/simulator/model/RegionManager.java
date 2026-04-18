@@ -164,10 +164,6 @@ public class RegionManager implements AnimalMapView {
 	public int getRegionHeight() {
 		return this.regionHeight;
 	}
-	
-	public RegionInfo getRegionInfo(int i, int j) {
-		return regions[i][j];
-	}
 
 	@Override
 	public Iterator<RegionData> iterator() {

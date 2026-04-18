@@ -33,8 +33,5 @@ public abstract class  AnimalBuilder extends Builder<Animal> {
 			position =  new Vector2D(X,Y);
 		}
 		return position;
-	}
-	
-	// TODO: hacer fillInData de cada animal (opcional)
-	
+	}	
 }
