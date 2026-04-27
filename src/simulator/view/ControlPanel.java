@@ -148,6 +148,7 @@ class ControlPanel extends JPanel {
 		this.stepsCounter = new JSpinner();
 		this.stepsCounter.setModel(new SpinnerNumberModel(maxSteps, minSteps, maxSteps, stepAdvance));
 		this.stepsCounter.setToolTipText("Simulation steps to run: " + minSteps + "-" + maxSteps);
+		this.stepsCounter.setMaximumSize(new Dimension(1, 50));
 		this.toolaBar.add(stepsCounter);
 
 		// Delta-Time label and textField
@@ -155,6 +156,7 @@ class ControlPanel extends JPanel {
 		this.deltaTimeInput = new JTextField(6);
 		this.deltaTimeInput.setToolTipText("Real time (seconds) corresponding to a step");
 		this.deltaTimeInput.setText("" + Main.deltaTime);
+		this.deltaTimeInput.setMaximumSize(new Dimension(1, 50));
 		this.toolaBar.add(deltaTimeInput);
 
 		// Quit Button
