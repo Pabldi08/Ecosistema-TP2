@@ -1,8 +1,10 @@
 package simulator.view;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -19,19 +21,33 @@ import simulator.model.RegionInfo;
 class RegionsTableModel extends AbstractTableModel implements EcoSysObserver {
 
 	private Controller ctrl;
-	private List<RegionData> regions;
+	//private List<RegionData> regions;
+	private List<Info> regiones;
 	
+	private class Info {
+		private int row;
+		private int col;
+		private String desc;
+		private Map<Diet, Integer> diets;
+		
+		public Info(int row, int col, String desc , Map<Diet, Integer> diets) {
+			this.row = row;
+			this.col = col;
+			this.desc = desc;
+			this.diets = diets;
+		}
+	}
 	
 	RegionsTableModel(Controller ctrl) {
 		this.ctrl = ctrl;
-		this.regions = new ArrayList<>();
+		this.regiones = new ArrayList<>();
 		this.ctrl.addObserver(this);
 		
 	}
 
 	@Override
 	public int getRowCount() {
-		return this.regions.size();
+		return this.regiones.size();
 	}
 
 	@Override
@@ -54,12 +70,24 @@ class RegionsTableModel extends AbstractTableModel implements EcoSysObserver {
     }
 	
 	private void updateTable(MapInfo map) {
-		regions.clear();
+		regiones.clear();
 		
 		Iterator<RegionData> an = map.iterator();
 		while(an.hasNext()) {
 			RegionData rd = an.next();
-			regions.add(rd);
+			
+			Map<Diet, Integer> m = new HashMap<>();
+			for(Diet diet : Diet.values()) {
+				m.put(diet, 0);
+			}
+				
+			for(AnimalInfo a : rd.r().getAnimalsInfo()) {
+				Diet d = a.getDiet();
+				m.put(d, m.get(d)+1);
+			}
+			
+			Info i = new Info(rd.row(), rd.col(), rd.r().toString(),m);
+			regiones.add(i);
 		}
 
 		fireTableDataChanged();
@@ -67,18 +95,18 @@ class RegionsTableModel extends AbstractTableModel implements EcoSysObserver {
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		RegionData rd = regions.get(rowIndex);
+		Info i = regiones.get(rowIndex);
 		if(columnIndex == 0) {
-			return rd.row();
+			return i.row;
 		}
 		else if(columnIndex == 1) {
-			return rd.col();
+			return i.col;
 		}
 		else if(columnIndex ==2) {
-			return rd.r();
+			return i.desc;
 		}else {
 			Diet d = Diet.values()[columnIndex - 3];
-			return rd.r().getAnimalsInfo().stream().filter(a -> a.getDiet() == d).count();
+			return i.diets.get(d);
 		}
 	}
 
