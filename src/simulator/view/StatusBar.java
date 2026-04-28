@@ -8,6 +8,7 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
+import javax.swing.SwingUtilities;
 
 import simulator.control.Controller;
 import simulator.model.AnimalInfo;
@@ -55,28 +56,30 @@ class StatusBar extends JPanel implements EcoSysObserver {
 
 	@Override
 	public void onRegister(double time, MapInfo map, List<AnimalInfo> animals) {
-		updateLabels(time, map, animals);
+		SwingUtilities.invokeLater(() -> updateLabels(time, map, animals));
 	}
 
 	@Override
 	public void onReset(double time, MapInfo map, List<AnimalInfo> animals) {
-		updateLabels(time, map, animals);
+		SwingUtilities.invokeLater(() -> updateLabels(time, map, animals));
 	}
 
 	@Override
 	public void onAnimalAdded(double time, MapInfo map, List<AnimalInfo> animals, AnimalInfo a) {
-		updateLabels(time, map, animals);
+		SwingUtilities.invokeLater(() -> updateLabels(time, map, animals));
 	}
 
 	@Override
 	public void onRegionSet(int row, int col, MapInfo map, RegionInfo r) {
-		this.dimension.setText("Dimension: " + map.getHeight() + "x" + map.getWidth()
+		SwingUtilities.invokeLater(() -> {
+			this.dimension.setText("Dimension: " + map.getHeight() + "x" + map.getWidth()
 		+ " " + map.getRows()+ "x" + map.getCols());
+		});
 	}
 
 	@Override
 	public void onAdvance(double time, MapInfo map, List<AnimalInfo> animals, double dt) {
-		updateLabels(time, map, animals);
+		SwingUtilities.invokeLater(() -> updateLabels(time, map, animals));
 	}
 	
 	private void updateLabels(double time, MapInfo map, List<AnimalInfo> animals) {

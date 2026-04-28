@@ -34,13 +34,15 @@ class ControlPanel extends JPanel {
 	final static int minSteps = 1;
 	final static int maxSteps = 10000;
 	final static int stepAdvance = 100;
+	final static int delayAdvance = 1;
+	final static int minDelay = 0;
+	final static int maxDelay = 1000;
 
 	private Controller ctrl;
 	private ChangeRegionsDialog changeRegionsDialog;
 
 	private JToolBar toolaBar;
 	private JFileChooser fc;
-	private boolean stopped = true; // utilizado en los botones de run/stop
 	private JButton quitButton;
 	private JButton folderButton;
 	private JButton regionButton;
@@ -48,8 +50,11 @@ class ControlPanel extends JPanel {
 	private JButton playButton;
 	private JButton stopButton;
 	private JSpinner stepsCounter;
+	private JSpinner delay;
 	private JTextField deltaTimeInput;
 
+	volatile private Thread thread;
+	
 	ControlPanel(Controller ctrl) {
 		this.ctrl = ctrl;
 		
@@ -121,12 +126,18 @@ class ControlPanel extends JPanel {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				double dt;
-				int n;
+				int n, d;
 				try {
 					buttonsState(false);
 					dt = Double.parseDouble(deltaTimeInput.getText());
 				    n = ((Number) stepsCounter.getValue()).intValue();
-				    runSim(n, dt);
+				    d = ((Number) delay.getValue()).intValue();
+				    thread = new Thread(() -> {
+		                runSim(n, dt, d);
+		                SwingUtilities.invokeLater(() -> buttonsState(true));
+		                thread = null;
+		            });
+		            thread.start();
 				} catch (Exception ex) {
 					ViewUtils.showErrorMsg(ControlPanel.this, "El valor de delta time no es un numero valido");
 					buttonsState(true);
@@ -140,7 +151,9 @@ class ControlPanel extends JPanel {
 		this.stopButton = new JButton();
 		this.stopButton.setToolTipText("Stop the simulator");
 		this.stopButton.setIcon(new ImageIcon("resources/icons/stop.png"));
-		this.stopButton.addActionListener(e -> buttonsState(true));
+		this.stopButton.addActionListener(e -> {
+			if(thread!=null) thread.interrupt();
+		});
 		this.toolaBar.add(stopButton);
 
 		// Steps label and spinner
@@ -158,6 +171,16 @@ class ControlPanel extends JPanel {
 		this.deltaTimeInput.setText("" + Main.deltaTime);
 		this.deltaTimeInput.setMaximumSize(new Dimension(1, 50));
 		this.toolaBar.add(deltaTimeInput);
+		
+		this.toolaBar.addSeparator();
+		
+		// Delay spinner
+		this.toolaBar.add(new JLabel("Delay: "));
+		this.delay = new JSpinner();
+		this.delay.setModel(new SpinnerNumberModel(1, minDelay, maxDelay, delayAdvance));
+		this.delay.setToolTipText("Delay steps: " + minDelay + "-" + maxDelay);
+		this.delay.setMaximumSize(new Dimension(1, 50));
+		this.toolaBar.add(delay);
 
 		// Quit Button
 		this.toolaBar.add(Box.createGlue()); // this aligns the button to the right
@@ -173,26 +196,24 @@ class ControlPanel extends JPanel {
 
 	}
 
-	private void runSim(int n, double dt) {
-		if (n > 0 && !this.stopped) {
-			try {
-				this.ctrl.advance(dt);
-				SwingUtilities.invokeLater(() -> runSim(n - 1, dt));
-				Thread.sleep(25);
-			} catch (Exception e) {
-				ViewUtils.showErrorMsg(ControlPanel.this, e.getMessage());
-				buttonsState(true);
-				this.stopped = true;
-			}
-		} else {
-			buttonsState(true);
-			this.stopped = true;
-		}
-		
+	private void runSim(int n, double dt, int delay) {
+	    while (n > 0 && !Thread.currentThread().isInterrupted()) {
+	        try {
+	            ctrl.advance(dt);
+	            Thread.sleep(delay);
+	            n--;
+	        } catch (InterruptedException e) {
+	            Thread.currentThread().interrupt();
+	        } catch (Exception e) {
+	            SwingUtilities.invokeLater(() ->
+	                ViewUtils.showErrorMsg(ControlPanel.this, e.getMessage())
+	            );
+	            return;
+	        }
+	    }
 	}
 
 	private void buttonsState(boolean state) {
-		stopped = state;
 		changeRegionButton.setEnabled(state);
 		regionButton.setEnabled(state);
 		folderButton.setEnabled(state);
