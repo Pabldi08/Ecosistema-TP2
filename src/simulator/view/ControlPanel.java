@@ -221,6 +221,7 @@ class ControlPanel extends JPanel {
 		stepsCounter.setEnabled(state);
 		deltaTimeInput.setEnabled(state);
 		playButton.setEnabled(state);
+		delay.setEnabled(state);
 	}
 	
 	private JSONObject loadJSONFile(InputStream in) {
