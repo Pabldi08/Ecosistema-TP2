@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import simulator.model.Animal.Diet;
-
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -49,6 +47,6 @@ public abstract class Region implements Entity, FoodSupplier, RegionInfo {
 	
 	@Override
 	public List<AnimalInfo> getAnimalsInfo() {  
-		 return new ArrayList<>(animalList); //se puede usar Collections.unmodifiableList(animals);  
+		 return new ArrayList<>(animalList);
 	}
 }

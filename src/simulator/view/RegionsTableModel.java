@@ -83,8 +83,10 @@ class RegionsTableModel extends AbstractTableModel implements EcoSysObserver {
 			}
 				
 			for(AnimalInfo a : rd.r().getAnimalsInfo()) {
-				Diet d = a.getDiet();
-				m.put(d, m.get(d)+1);
+				if(a != null){
+					Diet d = a.getDiet();
+					m.put(d, m.get(d)+1);
+				}
 			}
 			
 			Info i = new Info(rd.row(), rd.col(), rd.r().toString(),m);
